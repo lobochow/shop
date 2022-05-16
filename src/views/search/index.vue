@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="searchPage">
       <topNav/>
       <searchArea/>
       <selector/>
@@ -18,5 +18,9 @@ export default {
 </script>
 
 <style lang="less">
-
+    .searchPage{
+        width: 100%;
+        min-width: 1000px;
+        background-color: white;
+    }
 </style>

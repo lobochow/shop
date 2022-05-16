@@ -6,8 +6,6 @@
 
 <script>
 
-
-
 export default {
   name: 'App'
 }
@@ -18,9 +16,5 @@ export default {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-html{
-    background-color: rgb(244,244,244);
 }
 </style>

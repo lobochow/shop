@@ -8,6 +8,9 @@ Vue.use(VueRouter);
 
 import router from '../router/index'
 
+import checkBox from '@/components/checkBox.vue'
+Vue.component(checkBox.name, checkBox);
+
 new Vue({
   render: h => h(App),
   router

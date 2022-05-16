@@ -27,6 +27,10 @@ export default {
 </script>
 
 <style lang="less">
+html{
+    background-color: rgb(244,244,244);
+}
+
 .home {
     header {
         min-width: 1000px;
