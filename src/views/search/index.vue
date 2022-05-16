@@ -3,6 +3,7 @@
       <topNav/>
       <searchArea/>
       <selector/>
+      <spu-list></spu-list>
   </div>
 </template>
 
@@ -10,10 +11,11 @@
 import topNav from "@/components/topNav"
 import searchArea from "@/components/searchArea"
 import selector from "@/views/search/selector"
+import spuList from "@/views/search/spuList.vue"
 
 export default {
     name: 'search',
-    components: {topNav, searchArea, selector}
+    components: {topNav, searchArea, selector, spuList}
 }
 </script>
 
