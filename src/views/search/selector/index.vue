@@ -96,7 +96,7 @@
         <div class="senior">
             <div class="title"><span>高级选项：</span></div>
             <ul class="attrList">
-                <li @mouseenter="toggleSeniorDetail('visible')" @mouseleave="toggleSeniorDetail('hidden')">类型<i class="iconfont icon-xiangxia"></i></li>
+                <li @mouseenter="toggleSeniorDetail('visible', $event)" @mouseleave="toggleSeniorDetail('hidden', $event)">类型<i class="iconfont icon-xiangxia"></i></li>
                 <li>面板<i class="iconfont icon-xiangxia"></i></li>
                 <li>屏幕比例<i class="iconfont icon-xiangxia"></i></li>
                 <li>接口<i class="iconfont icon-xiangxia"></i></li>
@@ -126,7 +126,9 @@ export default {
     data() {
         return {
             multiSelectStatus: false,
-            seniorDetailTimer: -1
+            seniorDetailTimer: -1,
+            currentSeniorAttr: 0,
+            seniorAttrlist: []
         }
     },
     methods:{
@@ -137,18 +139,30 @@ export default {
             this.unflodList(e);
             this.multiSelectStatus = !this.multiSelectStatus;
         },
-        toggleSeniorDetail(status){
+        toggleSeniorDetail(status, e){
             if(this.seniorDetailTimer == -1){
                 this.seniorDetailTimer = setTimeout(() => {
                     this.$refs.seniorDetail.style.visibility = status;
                     this.seniorDetailTimer = -1;
+                    if(status == 'hidden'){
+                        this.seniorAttrlist[this.currentSeniorAttr].style.border = '1px solid #ddd';
+                        this.seniorAttrlist[this.currentSeniorAttr].style.position = 'static';
+                    }else{
+                        this.seniorAttrlist[this.currentSeniorAttr].style.borderBottom = '1px solid #fff';
+                        this.seniorAttrlist[this.currentSeniorAttr].style.borderTop = this.seniorAttrlist[this.currentSeniorAttr].style.borderLeft = this.seniorAttrlist[this.currentSeniorAttr].style.borderRight = '1px solid rgba(0, 0, 0, 0.4)';
+                        this.seniorAttrlist[this.currentSeniorAttr].style.position = 'relative';
+                        this.seniorAttrlist[this.currentSeniorAttr].style.zIndex = 2;
+                    }
                 }, 150);
             }else{
                 clearTimeout(this.seniorDetailTimer);
                 this.seniorDetailTimer = -1;
             }
-            console.log(this.seniorDetailTimer);
         }
+    },
+    mounted(){
+        this.seniorAttrlist = document.querySelectorAll('.senior .attrList li');
+        console.log(this.seniorAttrlist);
     }
 };
 </script>
@@ -337,11 +351,10 @@ export default {
             visibility: hidden;
             position: absolute;
             left: 0px;
-            top: 40px;
-            width: 980px;
+            top: 39px;
+            width: 1000px;
             border: 1px solid rgba(0, 0, 0, 0.4);
             background-color: white;
-            box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.2);
             ul {
                 list-style: none;
                 display: flex;
