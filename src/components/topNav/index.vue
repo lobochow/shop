@@ -32,6 +32,7 @@ export default {
 <style lang='less'>
 .topNav {
     width: 100%;
+    min-width: 1000px;
     margin: 0 auto;
     background-color: rgb(227, 228, 229);
     padding: 10px 0;

@@ -53,6 +53,7 @@ export default {
 <style lang='less'>
     .searchArea{
             width: 100%;
+            min-width: 1000px;
             background-color: white;
             .container{
                 display: flex;

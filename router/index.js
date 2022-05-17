@@ -2,6 +2,7 @@ import VueRouter from 'vue-router'
 
 import home from '@/views/home'
 import search from '@/views/search'
+import spuDetail from '@/views/spuDetail'
 
 export default new VueRouter({
     routes: [
@@ -13,8 +14,13 @@ export default new VueRouter({
         },
         {
             name: 'search',
-            path: '/',
+            path: '/search',
             component: search
+        },
+        {
+            name: 'spuDetail',
+            path: '/',
+            component: spuDetail
         }
     ]
 })
