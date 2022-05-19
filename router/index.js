@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import home from '@/views/home'
 import search from '@/views/search'
 import spuDetail from '@/views/spuDetail'
+import cart from '@/views/cart'
 
 export default new VueRouter({
     routes: [
@@ -19,8 +20,13 @@ export default new VueRouter({
         },
         {
             name: 'spuDetail',
-            path: '/',
+            path: '/spuDetail',
             component: spuDetail
+        },
+        {
+            name: 'cart',
+            path: '/',
+            component: cart
         }
     ]
 })
