@@ -4,6 +4,7 @@ import home from '@/views/home'
 import search from '@/views/search'
 import spuDetail from '@/views/spuDetail'
 import cart from '@/views/cart'
+import payBill from '@/views/payBill.vue'
 
 export default new VueRouter({
     routes: [
@@ -25,8 +26,13 @@ export default new VueRouter({
         },
         {
             name: 'cart',
-            path: '/',
+            path: '/cart',
             component: cart
+        },
+        {
+            name: 'payBill',
+            path: '/',
+            component: payBill
         }
     ]
 })

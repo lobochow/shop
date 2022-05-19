@@ -143,6 +143,8 @@ components: {topNav, searchArea}
                     display: grid;
                     grid-template-columns: 4fr 2fr 1fr 1fr 1fr 1fr;
                     gap: 10px;
+                    justify-items: center;
+                    align-items: center;
                     
                     border: 1px solid #F1F1F1;
                     border-top: 3px solid #AAAAAA;
@@ -173,11 +175,6 @@ components: {topNav, searchArea}
                             display: flex;
                             flex-direction: column;
                         }
-                    }
-
-                    >:nth-child(n+2):nth-child(-n+5){
-                        justify-self: center;
-                        align-self: center;
                     }
 
                     >:nth-child(6){
