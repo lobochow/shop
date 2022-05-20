@@ -113,6 +113,15 @@
             <div class="submitButton">提交订单</div>
           </div>
       </div>
+      <div class="payMsg">
+          <dir class="dialog">
+              <div>二维码</div>
+              <div>
+                  <button>取消</button>
+                  <button>支付完成</button>
+              </div>
+          </dir>
+      </div>
   </div>
 </template>
 
@@ -374,6 +383,47 @@ components: {topNav}
                 text-align: center;
                 border-radius: 3px;
                 margin: 10px 10px 40px auto;
+            }
+        }
+    }
+
+    .payMsg{
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 100vw;
+        height: 100vh;
+        z-index: 11;
+        background-color: rgba(153, 153, 153,0.3);
+
+        .dialog{
+            display: inline-block;
+            background-color: white;
+            height: 300px;
+            width: 250px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            box-shadow: 2px 2px 5px 3px rgba(0,0,0,0.2);
+
+            >:nth-child(1){
+                width: 150px;
+                height: 150px;
+                border: 1px solid black;
+                margin: 40px auto;
+                text-align: center;
+                line-height: 150px;
+            }
+
+            >:nth-child(2){
+                display: flex;
+                justify-content: center;
+                >:nth-child(1){
+                    margin-right: 20px;
+                }
             }
         }
     }
