@@ -6,6 +6,7 @@ import spuDetail from '@/views/spuDetail'
 import cart from '@/views/cart'
 import payBill from '@/views/payBill.vue'
 import billRecord from '@/views/billRecord.vue'
+import comment from '@/views/comment.vue'
 
 export default new VueRouter({
     routes: [
@@ -37,8 +38,13 @@ export default new VueRouter({
         },
         {
             name: 'billRecord',
-            path: '/',
+            path: '/billRecord',
             component: billRecord
+        },
+        {
+            name: 'comment',
+            path: '/',
+            component: comment
         }
     ]
 })
