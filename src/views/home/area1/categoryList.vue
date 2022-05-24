@@ -1,14 +1,26 @@
 <template>
-    <div class="categoryList">
+    <div
+        class="categoryList"
+        @mouseenter="toggleShowList(0)"
+        @mouseleave="toggleShowList(-1)"
+    >
         <div class="upCategory">
-            <span v-for="(quickTitle, index) in cate_1.quick" :key="index">{{quickTitle}}<i class="iconfont icon-xiangyou1"></i></span>
+            <span v-for="(quickTitle, index) in cate_1.quick" :key="index"
+                >{{ quickTitle }}<i class="iconfont icon-xiangyou1"></i
+            ></span>
         </div>
-        <div class="categorys" v-for="(cate_2, index) in cate_1.cates_2" :key="index">
+        <div
+            class="categorys"
+            v-for="(cate_2, index) in cate_1.cates_2"
+            :key="index"
+        >
             <div class="c2">
-                {{cate_2.c2name}}<i class="iconfont icon-xiangyou1"></i>
+                {{ cate_2.c2name }}<i class="iconfont icon-xiangyou1"></i>
             </div>
             <div class="c3">
-                <span v-for="(cate_3, index) in cate_2.cates_3" :key="index">{{cate_3.c3name}}</span>
+                <span v-for="(cate_3, index) in cate_2.cates_3" :key="index">{{
+                    cate_3.c3name
+                }}</span>
             </div>
         </div>
     </div>
@@ -19,22 +31,30 @@ export default {
     name: "categoryList",
     data() {
         return {
-            cate_1: {}
-        }
+            cate_1: {},
+            showtimer: -1,
+        };
     },
     methods: {
-        toggleShowList(index){
-            if(index == -1){
-                this.$el.style.visibility = 'hidden';
-            }else{
-                this.cate_1 = index;
-                this.$el.style.visibility = 'visible';
+        toggleShowList(index) {
+            if (this.showtimer != -1) {
+                clearTimeout(this.showtimer);
             }
-        }
+            this.showtimer = setTimeout(() => {
+                if (index == -1) {
+                    this.$el.style.visibility = "hidden";
+                } else if (index == 0) {
+                    this.$el.style.visibility = "visible";
+                } else {
+                    this.cate_1 = index;
+                    this.$el.style.visibility = "visible";
+                }
+            }, 50);
+        },
     },
-    mounted(){
-        this.$on('showList', this.toggleShowList);
-    }
+    mounted() {
+        this.$on("showList", this.toggleShowList);
+    },
 };
 </script>
 
@@ -80,6 +100,10 @@ export default {
                 margin-bottom: 5px;
             }
         }
+    }
+
+    &:hover {
+        visibility: visible;
     }
 }
 </style>

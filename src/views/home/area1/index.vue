@@ -1,7 +1,7 @@
 <template>
     <div class="area1">
         <div class="category" @mouseleave="toggleCate2List(-1)">
-            <div v-for="(cate_1, index) in cates_1" :key="index" @mouseenter="toggleCate2List(index)">
+            <div v-for="(cate_1, index) in cates_1" :key="index" @mouseenter="toggleCate2List(index)" class="c1wrap">
                 <span class="cate1" v-for="(c1name, index2) in cate_1.c1names" :key="index2">{{c1name}}</span>
             </div>
         </div>
@@ -52,9 +52,17 @@ export default {
         width: 200px;
         height: 470px;
         background-color: white;
-        padding: 10px;
+        padding: 10px 0px;
         font-size: 16px;
-        padding: 12px;
+        padding: 12px 0px;
+
+        .c1wrap{
+            padding: 0px 12px;
+        }
+
+        .c1wrap:hover{
+            background: #E0E0E0;
+        }
 
         span.cate1{
             display: inline-block;
