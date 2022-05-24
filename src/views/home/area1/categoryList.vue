@@ -1,178 +1,14 @@
 <template>
     <div class="categoryList">
         <div class="upCategory">
-            <span>电脑办公<i class="iconfont icon-xiangyou1"></i></span>
-            <span>企业采购<i class="iconfont icon-xiangyou1"></i></span>
-            <span>GAME+<i class="iconfont icon-xiangyou1"></i></span>
-            <span>装机大师<i class="iconfont icon-xiangyou1"></i></span>
-            <span>企业租赁<i class="iconfont icon-xiangyou1"></i></span>
+            <span v-for="(quickTitle, index) in cate_1.quick" :key="index">{{quickTitle}}<i class="iconfont icon-xiangyou1"></i></span>
         </div>
-        <div class="categorys">
+        <div class="categorys" v-for="(cate_2, index) in cate_1.cates_2" :key="index">
             <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
+                {{cate_2.c2name}}<i class="iconfont icon-xiangyou1"></i>
             </div>
             <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
-            </div>
-        </div>
-        <div class="categorys">
-            <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
-            </div>
-            <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
-            </div>
-        </div>
-        <div class="categorys">
-            <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
-            </div>
-            <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
-            </div>
-        </div>
-        <div class="categorys">
-            <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
-            </div>
-            <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
-            </div>
-        </div>
-        <div class="categorys">
-            <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
-            </div>
-            <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
-            </div>
-        </div>
-        <div class="categorys">
-            <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
-            </div>
-            <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
-            </div>
-        </div>
-        <div class="categorys">
-            <div class="c2">
-                电脑配件<i class="iconfont icon-xiangyou1"></i>
-            </div>
-            <div class="c3">
-                <span>显示器</span>
-                <span>CPU</span>
-                <span>主板</span>
-                <span>显卡</span>
-                <span>硬盘</span>
-                <span>内存</span>
-                <span>机箱</span>
-                <span>电源</span>
-                <span>散热器</span>
-                <span>显示器支架</span>
-                <span>刻录机/光驱</span>
-                <span>声卡/扩展卡</span>
-                <span>装机配件</span>
-                <span>SSD固态硬盘</span>
-                <span>组装电脑</span>
-                <span>USB分线器</span>
-                <span>主板CPU套装</span>
+                <span v-for="(cate_3, index) in cate_2.cates_3" :key="index">{{cate_3.c3name}}</span>
             </div>
         </div>
     </div>
@@ -181,12 +17,30 @@
 <script>
 export default {
     name: "categoryList",
+    data() {
+        return {
+            cate_1: {}
+        }
+    },
+    methods: {
+        toggleShowList(index){
+            if(index == -1){
+                this.$el.style.visibility = 'hidden';
+            }else{
+                this.cate_1 = index;
+                this.$el.style.visibility = 'visible';
+            }
+        }
+    },
+    mounted(){
+        this.$on('showList', this.toggleShowList);
+    }
 };
 </script>
 
 <style lang='less'>
 .categoryList {
-    display: none;
+    visibility: hidden;
     position: absolute;
     width: 800px;
     background-color: white;

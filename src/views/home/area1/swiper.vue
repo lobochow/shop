@@ -1,18 +1,14 @@
 <template>
     <div class="swiper">
-        <img src="@/assets/images/samplePic.png" alt="pic" />
-        <img src="@/assets/images/samplePic2.png" alt="pic" />
+        <div class="imgWrap" v-for="(imgUrl, index) in imgList" :key="index">
+            <img :src="imgUrl" alt="homeSwiperPic" />
+        </div>
         <div class="picControl">
             <i class="left iconfont icon-xiangzuo"></i>
             <i class="right iconfont icon-xiangyou1"></i>
         </div>
         <div class="picDot">
-            <div class="dot">
-                <div class="outCircle">
-                    <div class="inCircle"></div>
-                </div>
-            </div>
-            <div class="dot">
+            <div class="dot" v-for="(imgUrl, index) in imgList" :key="index" :class="{selected: currentImgIndex == index }">
                 <div class="outCircle">
                     <div class="inCircle"></div>
                 </div>
@@ -24,6 +20,26 @@
 <script>
 export default {
     name: "swiper",
+    data() {
+        return {
+            imgList: [],
+            currentImgIndex: 0
+        }
+    },
+    mounted(){
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if(xhr.readyState == 4){
+                if(xhr.status === 200){
+                    this.imgList = JSON.parse(xhr.responseText);
+                }else{
+                    console.log('获取首页轮播图失败!');
+                }
+            }
+        }
+        xhr.open('get', '/v1/homeSwiper', true);
+        xhr.send(null);
+    }
 };
 </script>
 
@@ -34,33 +50,44 @@ export default {
     background-color: white;
     overflow: hidden;
     position: relative;
+    display: flex;
 
-    img {
+    .imgWrap{
         width: 580px;
+        height: 470px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        img {
+            max-width: 580px;
+            max-height: 470px;
+        }
     }
 
     .picControl {
+        position: absolute;
+        width: 100%;
+        top: 220px;
         i {
-            position: absolute;
             color: #e1251b;
             z-index: 1;
-            top: 230px;
             width: 30px;
             height: 30px;
             background: rgba(0, 0, 0, 0.2);
             color: #cfcfcf;
             line-height: 30px;
             text-align: center;
-            display: block;
         }
         i:hover {
             background: rgba(0, 0, 0, 0.5);
         }
         .right {
-            left: 550px;
+            float: right;
             border-radius: 15px 0 0 15px;
         }
         .left {
+            float: left;
             border-radius: 0 15px 15px 0;
         }
     }
@@ -94,7 +121,7 @@ export default {
             }
         }
 
-        .dot:hover {
+        .dot.selected {
             .outCircle {
                 background-color: rgba(153, 153, 153, 0.4);
             }

@@ -13,7 +13,7 @@ export default new VueRouter({
         {
             //路由命名
             name: 'home',
-            path: '/home',
+            path: '/',
             component: home
         },
         {
@@ -43,7 +43,7 @@ export default new VueRouter({
         },
         {
             name: 'comment',
-            path: '/',
+            path: '/comment',
             component: comment
         }
     ]

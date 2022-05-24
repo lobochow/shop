@@ -1,6 +1,5 @@
 <template>
   <div>
-      <topNav/>
       <searchArea/>
       <div class="cartWrap">
           <div class="cartContainer">

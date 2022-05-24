@@ -1,6 +1,5 @@
 <template>
   <div class="searchPage">
-      <topNav/>
       <searchArea/>
       <selector/>
       <spu-list></spu-list>

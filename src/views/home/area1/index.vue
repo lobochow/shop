@@ -1,10 +1,8 @@
 <template>
     <div class="area1">
-        <div class="category">
-            <div>
-                <span class="cate1">分类1</span>
-                <span>/</span>
-                <span class="cate1">分类2</span>
+        <div class="category" @mouseleave="toggleCate2List(-1)">
+            <div v-for="(cate_1, index) in cates_1" :key="index" @mouseenter="toggleCate2List(index)">
+                <span class="cate1" v-for="(c1name, index2) in cate_1.c1names" :key="index2">{{c1name}}</span>
             </div>
         </div>
 
@@ -23,7 +21,24 @@ import easyEntry from './easyEntry.vue'
 
 export default {
     name: "area1",
-    components: {categoryList, swiper, easyEntry}
+    props: ['cates_1'],
+    components: {categoryList, swiper, easyEntry},
+    data() {
+        return {
+            isShow: 'hidden',
+            showCate2List: {isShow: 'hidden', cate2Index: 1}
+        }
+    },
+    methods: {
+        toggleCate2List(index){
+            let targetChild = this.$children.find(vc => vc.$options._componentTag == 'categoryList');
+            if(index == -1){
+                targetChild.toggleShowList(-1);
+            }else{
+                targetChild.toggleShowList(this.cates_1[index]);
+            }
+        }
+    },
 };
 </script>
 
@@ -40,6 +55,22 @@ export default {
         padding: 10px;
         font-size: 16px;
         padding: 12px;
+
+        span.cate1{
+            display: inline-block;
+            padding: 2px 0px;
+
+            &:not(:last-child)::after{
+                content: '/';
+                color: black !important;
+                display: inline-block;
+                padding: 0px 2px;
+                font-size: 10px;
+                vertical-align: bottom;
+                margin-bottom: 3px;
+            }
+        }
+
         span.cate1:hover {
             color: #e1251b;
             cursor: pointer;

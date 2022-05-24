@@ -1,6 +1,5 @@
 <template>
   <div>
-      <topNav/>
       <div class="commentWrap">
           <div class="header">
               <h5>评价订单</h5>

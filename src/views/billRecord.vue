@@ -1,6 +1,5 @@
 <template>
   <div>
-      <topNav/>
       <div class="billRecordWrap">
           <div class="billRecords">
               <div class="tags">
