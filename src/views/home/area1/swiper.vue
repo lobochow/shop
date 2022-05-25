@@ -54,7 +54,8 @@ export default {
             this.currentImgIndex = activedIndex;
         },
         jumptoImg(index) {
-            this.imgVCs.forEach((vc, index2) => vc.translateItem(index,this.currentImgIndex, index2));
+            this.imgVCs.forEach((vc, index2) => vc.translateItem('right',index,this.currentImgIndex, index2));
+            this.currentImgIndex = index;
         }
     },
     mounted() {

@@ -9,79 +9,76 @@ export default {
     name: 'swiperItem',
     data() {
         return {
-            transform: '',
-            transition: ''
-        }
-    },
-    computed: {
-        itemStyle(){
-            let {transform, transition} = this;
-            return {
-                transform,
-                transition
+            itemStyle: {
+                transform: '',
+                transition: ''
             }
         }
     },
     methods: {
-        initItem(activedIndex, index){
-            if(activedIndex != index){
+        initItem(activedIndex, index) {
+            if (activedIndex != index) {
                 this.translateLeft();
             }
         },
-        translateItem(flag, newIndex, oldIndex, index){
-            if(index == newIndex){
-                if(flag == 'left'){
+        translateItem(flag, newIndex, oldIndex, index) {
+            if (index == newIndex) {
+                if (flag == 'left') {
                     this.onAnimation();
                     this.translateCenter();
                 }
-                if(flag == 'right'){
+                if (flag == 'right') {
+                    this.offAnimation();
                     this.translateRight();
-                    this.$nextTick(()=>{
-                        this.translateCenter();
+                    setTimeout(() => {
                         this.onAnimation();
-                    })
+                        this.translateCenter();
+                    }, 10);
                 }
-            }else if(index == oldIndex){
-                if(flag == 'left'){
+            } else if (index == oldIndex) {
+                if (flag == 'left') {
                     this.translateRight();
                 }
-                if(flag == 'right'){
+                if (flag == 'right') {
                     this.translateLeft();
                 }
-            } else{
+            } else {
                 this.offAnimation();
                 this.translateLeft();
             }
         },
-        translateLeft(){
-            this.transform = `translateX(${-this.$el.offsetWidth}px)`;
+        translateLeft() {
+            this.itemStyle.transform = `translateX(${-this.$el.offsetWidth}px)`;
         },
-        translateRight(){
-            this.transform = `translateX(${+this.$el.offsetWidth}px)`;
+        translateRight() {
+            this.itemStyle.transform = `translateX(${+this.$el.offsetWidth}px)`;
         },
-        translateCenter(){
-            this.transform = `translateX(0px)`;
+        translateCenter() {
+            this.itemStyle.transform = `translateX(0px)`;
         },
-        onAnimation(){
-            this.transition = '0.25s';
+        onAnimation() {
+            this.itemStyle.transition = '0.25s';
         },
-        offAnimation(){
-            this.transition = 'none';
+        offAnimation() {
+            this.itemStyle.transition = 'none';
         }
     },
+    mounted(){
+        this.itemStyle['--distrance'] = this.$el.offsetWidth;
+    }
 }
 </script>
 
 <style lang="less" scoped>
-    .imgWrap {
-        width: 580px;
-        height: 470px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        >* {
-            max-width: 580px;
-            max-height: 470px;
-        }
+.imgWrap {
+    width: 580px;
+    height: 470px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > * {
+        max-width: 580px;
+        max-height: 470px;
     }
+}
 </style>
