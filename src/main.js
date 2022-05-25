@@ -11,6 +11,9 @@ import router from './router/index'
 import checkBox from '@/components/checkBox.vue'
 Vue.component(checkBox.name, checkBox);
 
+import ElementUI from 'element-ui';
+Vue.use(ElementUI);
+
 new Vue({
   render: h => h(App),
   router

@@ -1,29 +1,16 @@
 <template>
     <div class="swiperWrap">
         <div class="swiper">
-            <div
-                class="imgWrap"
-                v-for="(imgUrl, index) in imgList"
-                :key="index"
-            >
+            <swiperItem v-for="(imgUrl, index) in imgList" :key="index">
                 <img :src="imgUrl" alt="homeSwiperPic" />
-            </div>
+            </swiperItem>
         </div>
         <div class="picControl">
             <i class="left iconfont icon-xiangzuo" @click="moveImg('left')"></i>
-            <i
-                class="right iconfont icon-xiangyou1"
-                @click="moveImg('right')"
-            ></i>
+            <i class="right iconfont icon-xiangyou1" @click="moveImg('right')"></i>
         </div>
         <div class="picDot">
-            <div
-                class="dot"
-                v-for="(imgUrl, index) in imgList"
-                :key="index"
-                :class="{ selected: currentImgIndex == index }"
-                @click="jumptoImg(index)"
-            >
+            <div class="dot" v-for="(imgUrl, index) in imgList" :key="index" :class="{ selected: currentImgIndex == index }" @click="jumptoImg(index)">
                 <div class="outCircle">
                     <div class="inCircle"></div>
                 </div>
@@ -33,50 +20,55 @@
 </template>
 
 <script>
+import swiperItem from '@/views/home/area1/swiperItem'
+
 export default {
     name: "swiper",
+    components: { swiperItem },
     data() {
         return {
+            imgVCs: [],
             imgList: [],
             currentImgIndex: 0,
         };
     },
     methods: {
         moveImg(flag) {
-            let swiperDom = this.$el.querySelector(".swiper");
-            let currentXPosition = window.getComputedStyle(swiperDom).left;
-            currentXPosition = currentXPosition.replace("px", "");
-            if (flag == "right") {
-                currentXPosition = +currentXPosition - 580;
-                if(-currentXPosition/580 < this.imgList.length){
-                    this.currentImgIndex++;
-                }else{
-                    this.currentImgIndex = 0;
-                    currentXPosition = 0;
+            let activedIndex = this.currentImgIndex;
+            if(flag == 'left') {
+                activedIndex -= 1;
+                if(activedIndex < 0) {
+                    activedIndex = this.imgList.length - 1;
                 }
-            }else{
-                currentXPosition = +currentXPosition + 580;
-                if(currentXPosition > 0) {
-                    this.currentImgIndex = this.imgList.length - 1;
-                    currentXPosition = this.currentImgIndex * -580;
-                }else{
-                    this.currentImgIndex--;
-                }
+                this.imgVCs.forEach((vc,indexSelf) => vc.translateItem(flag, activedIndex, this.currentImgIndex, indexSelf));
             }
-            swiperDom.style.left = currentXPosition + 'px';
+
+            if(flag == 'right') {
+                activedIndex += 1;
+                if(activedIndex >= this.imgList.length){
+                    activedIndex = 0;
+                }
+                this.imgVCs.forEach((vc,indexSelf) => vc.translateItem(flag, activedIndex, this.currentImgIndex, indexSelf));
+            }
+
+            this.currentImgIndex = activedIndex;
         },
-        jumptoImg(index){
-            let swiperDom = this.$el.querySelector(".swiper");
-            swiperDom.style.left = -index * 580 + 'px';
-            this.currentImgIndex = index;
+        jumptoImg(index) {
+            this.imgVCs.forEach((vc, index2) => vc.translateItem(index,this.currentImgIndex, index2));
         }
     },
     mounted() {
+        //获取图片信息
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
                 if (xhr.status === 200) {
                     this.imgList = JSON.parse(xhr.responseText);
+                    //获取图片子组件
+                    this.$nextTick(() => {
+                        this.imgVCs = this.$children.filter(vc => vc.$options.name == 'swiperItem');
+                        this.imgVCs.forEach((item, index) => item.initItem(this.currentImgIndex, index));
+                    });
                 } else {
                     console.log("获取首页轮播图失败!");
                 }
@@ -99,7 +91,6 @@ export default {
 
 .swiper {
     position: relative;
-    display: flex;
     transition: 0.3s;
     left: 0;
 
@@ -110,6 +101,9 @@ export default {
         justify-content: center;
         align-items: center;
         flex-shrink: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
         img {
             max-width: 580px;
             max-height: 470px;
