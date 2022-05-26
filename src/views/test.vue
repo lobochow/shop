@@ -1,10 +1,6 @@
 <template>
-    <div class="swiperWrap">
-        <el-carousel height="150px">
-            <el-carousel-item v-for="item in 7" :key="item">
-                <h3>第{{item}}个图</h3>
-            </el-carousel-item>
-        </el-carousel>
+    <div class="outside">
+        <div class="inside"></div>
     </div>
 </template>
 
@@ -15,14 +11,20 @@ name:'test'
 </script>
 
 <style lang="less" scoped>
-.swiperWrap{
-    background-color: #050505;
+.outside{
+    width: 300px;
+    height: 300px;
+    margin-left: 10px;
+
+    border: 1px solid black;
 }
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    line-height: 150px;
-    margin: 0;
-    text-align: center;
-  }
+
+.inside{
+    width: 100px;
+    height: 100px;
+    margin-top: auto;
+    margin-bottom: 0px;
+
+    border: 1px solid black;
+}
 </style>

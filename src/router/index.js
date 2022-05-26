@@ -8,7 +8,10 @@ import payBill from '@/views/payBill.vue'
 import billRecord from '@/views/billRecord.vue'
 import comment from '@/views/comment.vue'
 import login from '@/views/login.vue'
-import register from '@/views/register.vue'
+import register from '@/views/register/index.vue'
+import phone from '@/views/register/phone.vue'
+import account from '@/views/register/account.vue'
+import complete from '@/views/register/complete.vue'
 import test from '@/views/test.vue'
 
 export default new VueRouter({
@@ -52,7 +55,28 @@ export default new VueRouter({
         {
             name: 'register',
             path: '/register',
-            component: register
+            component: register,
+            children:[
+                {
+                    name:'phone',
+                    path:'phone',
+                    component: phone
+                },
+                {
+                    name:'account',
+                    path:'account',
+                    component: account
+                },
+                {
+                    name:'complete',
+                    path:'complete',
+                    component: complete
+                },
+                {
+                    path: '/register',
+                    redirect: '/register/phone'
+                }
+            ]
         },
         {
             name: 'login',
