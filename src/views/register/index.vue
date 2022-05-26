@@ -1,6 +1,62 @@
 <template>
-    <div>
-        <router-view></router-view>
+    <div class="register-root">
+        <div class="header-wrap">
+            <header>
+                <div class="imgWrap">
+                    <img src="@/assets/images/logo.png" alt="logo">
+                </div>
+                <h3>欢迎注册</h3>
+                <p class="loginTip">已有账号？
+                    <span>
+                        请登录>
+                    </span>
+                </p>
+            </header>
+        </div>
+        <div class="main-wrap">
+            <main>
+                <div class="status">
+                    <p class="status-icon">
+                        <span class="stepComplete">
+                            <span>1</span>
+                            <i class="iconfont icon-duigou"></i>
+                        </span>
+                        <span class="arrowComplete">··········></span>
+                        <span class="currentStep">
+                            <span>2</span>
+                            <i class="iconfont icon-duigou"></i>
+                        </span>
+                        <span>··········></span>
+                        <span class="normal">
+                            <span>3</span>
+                            <i class="iconfont icon-duigou"></i>
+                        </span>
+                    </p>
+                    <p class="status-title">
+                        <span class="complete">验证手机号</span>
+                        <span class="current">填写账号信息</span>
+                        <span>注册成功</span>
+                    </p>
+                </div>
+
+                <router-view></router-view>
+            </main>
+        </div>
+        <footer>
+            <ul>
+                <li>关于我们</li>
+                <li>联系我们</li>
+                <li>人才招聘</li>
+                <li>商家入驻</li>
+                <li>广告服务</li>
+                <li>友情链接</li>
+                <li>手机京东</li>
+                <li>销售联盟</li>
+                <li>京东社区</li>
+                <li>京东公益</li>
+                <li>English Site</li>
+            </ul>
+        </footer>
     </div>
 </template>
 
@@ -145,54 +201,6 @@ export default {
                 .current {
                     color: #33bb44;
                 }
-            }
-        }
-
-        > .register {
-            margin-top: 40px;
-
-            .register-phone {
-                margin-bottom: 40px;
-                > input,
-                select {
-                    vertical-align: middle;
-
-                    padding: 0 1em;
-                    height: 3em;
-
-                    font-size: 16px;
-
-                    outline: none;
-                    border: 1px solid #dddddd;
-                }
-            }
-
-            .register-code {
-                display: flex;
-
-                > input,
-                button {
-                    flex-grow: 1;
-                    vertical-align: middle;
-
-                    padding: 0 1em;
-                    height: 3em;
-
-                    font-size: 16px;
-
-                    outline: none;
-                    border: 1px solid #dddddd;
-                }
-            }
-
-            .register-nextStep {
-                margin-top: 40px;
-                padding: 0.5em 0;
-
-                color: white;
-                text-align: center;
-
-                background-color: #e22;
             }
         }
     }
