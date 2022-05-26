@@ -7,6 +7,8 @@ import cart from '@/views/cart'
 import payBill from '@/views/payBill.vue'
 import billRecord from '@/views/billRecord.vue'
 import comment from '@/views/comment.vue'
+import login from '@/views/login.vue'
+import register from '@/views/register.vue'
 import test from '@/views/test.vue'
 
 export default new VueRouter({
@@ -46,6 +48,16 @@ export default new VueRouter({
             name: 'comment',
             path: '/comment',
             component: comment
+        },
+        {
+            name: 'register',
+            path: '/register',
+            component: register
+        },
+        {
+            name: 'login',
+            path: '/login',
+            component: login
         },
         {
             name: 'test',
