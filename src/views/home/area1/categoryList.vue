@@ -5,7 +5,7 @@
         @mouseleave="toggleShowList(-1)"
     >
         <div class="upCategory">
-            <span v-for="(quickTitle, index) in cate_1.quick" :key="index"
+            <span v-for="(quickTitle, index) in cate_1.quick" :key="index" @click="goSearch(quickTitle)"
                 >{{ quickTitle }}<i class="iconfont icon-xiangyou1"></i
             ></span>
         </div>
@@ -14,11 +14,11 @@
             v-for="(cate_2, index) in cate_1.cates_2"
             :key="index"
         >
-            <div class="c2">
+            <div class="c2" @click="goSearch(cate_2.c2name)">
                 {{ cate_2.c2name }}<i class="iconfont icon-xiangyou1"></i>
             </div>
             <div class="c3">
-                <span v-for="(cate_3, index) in cate_2.cates_3" :key="index">{{
+                <span v-for="(cate_3, index) in cate_2.cates_3" :key="index" @click="goSearch(cate_3.c3name)">{{
                     cate_3.c3name
                 }}</span>
             </div>
@@ -27,8 +27,12 @@
 </template>
 
 <script>
+//引入mixin
+import {routerJump} from '@/mixin/index.js'
+
 export default {
     name: "categoryList",
+    mixins: [routerJump],
     data() {
         return {
             cate_1: {},
@@ -58,7 +62,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .categoryList {
     visibility: hidden;
     position: absolute;
@@ -104,6 +108,22 @@ export default {
 
     &:hover {
         visibility: visible;
+    }
+}
+
+.c2,.c3 > span,.upCategory > span{
+    cursor: pointer;
+}
+
+.c2,.c3 > span{
+    &:hover{
+        color: #E22519;
+    }
+}
+
+.upCategory > span{
+    &:hover{
+        background-color: #E22519;
     }
 }
 </style>

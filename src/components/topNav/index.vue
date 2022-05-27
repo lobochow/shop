@@ -10,22 +10,20 @@
                     <span>你好，请登录</span>
                     <span>免费注册</span>
                 </div>
-                <span>我的订单</span>
-                <span>我的京东</span>
-                <span>京东会员</span>
-                <span>企业采购</span>
-                <span>客户服务</span>
-                <span>网站导航</span>
-                <span>手机京东</span>
-                <span>网站无障碍</span>
+                <span @click="goBillRecord">我的订单</span>
+                <span>我的购物车</span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+//引入mixin
+import {routerJump} from '@/mixin/index.js'
+
 export default {
     name: "topNav",
+    mixins: [routerJump],
 };
 </script>
 

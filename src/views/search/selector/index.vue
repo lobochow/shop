@@ -162,7 +162,6 @@ export default {
     },
     mounted(){
         this.seniorAttrlist = document.querySelectorAll('.senior .attrList li');
-        console.log(this.seniorAttrlist);
     }
 };
 </script>

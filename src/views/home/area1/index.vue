@@ -2,7 +2,7 @@
     <div class="area1">
         <div class="category" @mouseleave="toggleCate2List(-1)">
             <div v-for="(cate_1, index) in cates_1" :key="index" @mouseenter="toggleCate2List(index)" class="c1wrap">
-                <span class="cate1" v-for="(c1name, index2) in cate_1.c1names" :key="index2">{{c1name}}</span>
+                <span class="cate1" v-for="(c1name, index2) in cate_1.c1names" :key="index2" @click="goSearch(c1name)">{{c1name}}</span>
             </div>
         </div>
 
@@ -19,9 +19,13 @@ import categoryList from './categoryList.vue'
 import swiper from './swiper.vue'
 import easyEntry from './easyEntry.vue'
 
+//引入mixin
+import {routerJump} from '@/mixin/index.js'
+
 export default {
     name: "area1",
     props: ['cates_1'],
+    mixins: [routerJump],
     components: {categoryList, swiper, easyEntry},
     data() {
         return {
@@ -58,10 +62,14 @@ export default {
 
         .c1wrap{
             padding: 0px 12px;
+
+            background-color: #ffffff;
+
+            transition: 0.25s;
         }
 
         .c1wrap:hover{
-            background: #E0E0E0;
+            background-color: #E0E0E0;
         }
 
         span.cate1{

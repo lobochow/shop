@@ -1,17 +1,17 @@
 <template>
-  <div class="spuListWrap">
-        <div class="spuItem">
+    <div class="spuListWrap">
+        <div class="spuItem" v-for="(item, index) in spuList" :key="index" @click="goSpuDetail(item.id)">
             <div class="imgWrap">
-                <img src="@/assets/images/spuImg/2060.png" alt="iphone">
+                <img :src="item.posterUrl" alt="iphone">
             </div>
             <div class="priceWrap">
-                <span>¥1799.00</span>
+                <span>¥{{item.price}}</span>
             </div>
             <div class="descriptionWrap">
-                <span>微星（MSI）万图师 GeForce RTX 2060 VENTUS 12G OC 超频版 电竞游戏设计专业电脑显卡</span>
+                <span>{{item.title}}</span>
             </div>
             <div class="commentsNumWrap">
-                <span><b>5</b>条评价</span>
+                <span><b>{{item.commentCount}}</b>条评价</span>
             </div>
             <div class="operateWrap">
                 <div class="compare">
@@ -28,103 +28,147 @@
                 </div>
             </div>
         </div>
-  </div>
+    </div>
 </template>
 
 <script>
 export default {
-    name: 'spuList'
+    name: 'spuList',
+    data() {
+        return {
+            spuList: []
+        }
+    },
+    methods: {
+        //获取商品列表
+        getSpuList() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        this.spuList = JSON.parse(xhr.responseText);
+                    } else {
+                        console.log('获取spu列表失败：', xhr.statusText);
+                    }
+                }
+            }
+
+            xhr.open('get', '/v1/getSpu', true);
+            xhr.send();
+        },
+        goSpuDetail(id){
+            this.$router.push({
+                path: '/spuDetail',
+                query: id
+            })
+        }
+    },
+    mounted() { 
+        this.getSpuList();
+    }
 }
 </script>
 
 <style lang="less">
-.spuListWrap{
-    width: 1000px;
-    margin: 0px auto;
+.spuListWrap {
     display: flex;
     flex-wrap: wrap;
-    padding: 10px 0px;
+    justify-content: space-around;
 
-    .spuItem{
+    width: 1000px;
+    padding: 10px 0px;
+    margin: 0px auto;
+
+    .spuItem {
         width: 240px;
-        background-color: white;
         padding: 10px;
+        margin-top: 20px;
+
+        background-color: white;
         border: 1px solid transparent;
 
-        *{
+        * {
             margin-bottom: 5px;
         }
 
-        .imgWrap{
-            text-align: center;
-            img{
+        .imgWrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 100%;
+            height: 220px;
+            img {
                 max-width: 180px;
                 max-height: 220px;
             }
         }
-        .priceWrap{
+        .priceWrap {
             font-size: 20px;
-            color: #E4393C;
+            color: #e4393c;
         }
-        .descriptionWrap{
+        .descriptionWrap {
             font-size: 10px;
             color: #666666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .commentsNumWrap{
+        .commentsNumWrap {
             font-size: 10px;
-            span{
-                b{
-                    color: #646FB0;
+            span {
+                b {
+                    color: #646fb0;
                     font-size: 14px;
                 }
             }
         }
-        .operateWrap{
+        .operateWrap {
             display: flex;
-            *{
+            * {
                 font-size: 12px;
             }
 
-            >*{
-                border: 1px solid #DDDDDD;
+            > * {
+                border: 1px solid #dddddd;
                 padding: 5px 5px 2px 5px;
                 flex-shrink: 0;
             }
 
-            .compare{
+            .compare {
                 color: #666666;
-                input{
+                input {
                     margin-top: 2px;
                 }
-                span{
+                span {
                     vertical-align: top;
                 }
 
-                &:hover{
-                    color: #E4393C;
-                    border-color: #E4393C;
+                &:hover {
+                    color: #e4393c;
+                    border-color: #e4393c;
                 }
             }
 
-            .like{
+            .like {
                 color: #666666;
-                &:hover{
-                    color: #E4393C;
-                    border-color: #E4393C;
+                &:hover {
+                    color: #e4393c;
+                    border-color: #e4393c;
                 }
             }
 
-            .addCart{
-                color: #E4393C;
-                &:hover{
-                    border-color: #E4393C;
+            .addCart {
+                color: #e4393c;
+                &:hover {
+                    border-color: #e4393c;
                 }
             }
         }
 
-        &:hover{
-            border: 1px solid #CCC;
-            box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.1);
+        &:hover {
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
         }
     }
 }

@@ -22,6 +22,8 @@
 <script>
 import swiperItem from '@/views/home/area1/swiperItem'
 
+import { getHomeSwiperImg } from '@/api'
+
 export default {
     name: "swiper",
     components: { swiperItem },
@@ -35,48 +37,38 @@ export default {
     methods: {
         moveImg(flag) {
             let activedIndex = this.currentImgIndex;
-            if(flag == 'left') {
+            if (flag == 'left') {
                 activedIndex -= 1;
-                if(activedIndex < 0) {
+                if (activedIndex < 0) {
                     activedIndex = this.imgList.length - 1;
                 }
-                this.imgVCs.forEach((vc,indexSelf) => vc.translateItem(flag, activedIndex, this.currentImgIndex, indexSelf));
+                this.imgVCs.forEach((vc, indexSelf) => vc.translateItem(flag, activedIndex, this.currentImgIndex, indexSelf));
             }
 
-            if(flag == 'right') {
+            if (flag == 'right') {
                 activedIndex += 1;
-                if(activedIndex >= this.imgList.length){
+                if (activedIndex >= this.imgList.length) {
                     activedIndex = 0;
                 }
-                this.imgVCs.forEach((vc,indexSelf) => vc.translateItem(flag, activedIndex, this.currentImgIndex, indexSelf));
+                this.imgVCs.forEach((vc, indexSelf) => vc.translateItem(flag, activedIndex, this.currentImgIndex, indexSelf));
             }
 
             this.currentImgIndex = activedIndex;
         },
         jumptoImg(index) {
-            this.imgVCs.forEach((vc, index2) => vc.translateItem('right',index,this.currentImgIndex, index2));
+            this.imgVCs.forEach((vc, index2) => vc.translateItem('right', index, this.currentImgIndex, index2));
             this.currentImgIndex = index;
+        },
+        async setImgList() {
+            this.imgList = await getHomeSwiperImg();
+            this.$nextTick(() => {
+                this.imgVCs = this.$children.filter(vc => vc.$options.name == 'swiperItem');
+                this.imgVCs.forEach((item, index) => item.initItem(this.currentImgIndex, index));
+            });
         }
     },
     mounted() {
-        //获取图片信息
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
-                if (xhr.status === 200) {
-                    this.imgList = JSON.parse(xhr.responseText);
-                    //获取图片子组件
-                    this.$nextTick(() => {
-                        this.imgVCs = this.$children.filter(vc => vc.$options.name == 'swiperItem');
-                        this.imgVCs.forEach((item, index) => item.initItem(this.currentImgIndex, index));
-                    });
-                } else {
-                    console.log("获取首页轮播图失败!");
-                }
-            }
-        };
-        xhr.open("get", "/v1/homeSwiper", true);
-        xhr.send(null);
+        this.setImgList();
     },
 };
 </script>
