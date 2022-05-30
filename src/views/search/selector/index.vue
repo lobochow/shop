@@ -2,92 +2,36 @@
     <div class="selectorContainer">
         <div class="brand">
             <span class="title">品牌：</span>
-            <div class="brandImgContainer">
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/huawei.png"
-                        alt="huawei"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/apple.png"
-                        alt="apple"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/honor.png"
-                        alt="honor"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img src="@/assets/images/phoneBrand/lg.png" alt="lg" />
-                </div>
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/meizu.png"
-                        alt="meizu"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img src="@/assets/images/phoneBrand/oppo.png" alt="oppo" />
-                </div>
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/nokia.png"
-                        alt="nokia"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/samsung.png"
-                        alt="samsung"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img src="@/assets/images/phoneBrand/sony.png" alt="sony" />
-                </div>
-                <div class="imgContainer">
-                    <img
-                        src="@/assets/images/phoneBrand/xiaomi.png"
-                        alt="xiaomi"
-                    />
-                </div>
-                <div class="imgContainer">
-                    <img src="@/assets/images/phoneBrand/zte.png" alt="zte" />
+            <div class="brandImgContainer" ref="brandImgContainer">
+                <div class="imgContainer" v-for="(item,index) in spuInfo.brandInfo" :key="index">
+                    <img :src="item.brandImg" :alt="item.name" />
                 </div>
             </div>
-            <div class="more">
+            <div class="more" @click="unflod('brandImgContainer')">
                 更多
                 <i class="iconfont icon-xiangxia"></i>
             </div>
         </div>
 
-        <div class="attribute flod" ref="flodList">
-            <span class="title">电脑组件：</span>
+        <div class="attribute" :ref="`attribute${index}`" v-for="(item, index) in spuInfo.attrList" :key="index">
+            <span class="title">{{item.attrName}}：</span>
             <div class="listContainer">
                 <ul class="attributeList">
-                    <li><input type="checkbox" v-show="multiSelectStatus">显示器</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">显示器配件</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">组装电脑</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">显卡</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">特殊商品</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">主板</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">机箱</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">散热器</li>
-                    <li><input type="checkbox" v-show="multiSelectStatus">装机配件</li>
+                    <li v-for="(attrVaule, valueIndex) in item.attrValues" :key="valueIndex">
+                        <input type="checkbox" v-show="multiSelectStatus">
+                        {{attrVaule}}
+                    </li>
                 </ul>
                 <div class="buttons">
                     <button>确定</button>
-                    <button @click="toggleMultiSelect">取消</button>
+                    <button @click="toggleMultiSelect(`attribute${index}}`)">取消</button>
                 </div>
             </div>
-            <div class="more" @click="unflodList" v-show="!multiSelectStatus">
+            <div class="more" @click="unflod(`attribute${index}}`)" v-show="!multiSelectStatus">
                 更多
                 <i class="iconfont icon-xiangxia"></i>
             </div>
-            <div class="multiSelect" @click="toggleMultiSelect" v-show="!multiSelectStatus">
+            <div class="multiSelect" @click="toggleMultiSelect(`attribute${index}}`)" v-show="!multiSelectStatus">
                 多选
                 <i class="iconfont icon-xiangxia"></i>
             </div>
@@ -96,24 +40,15 @@
         <div class="senior">
             <div class="title"><span>高级选项：</span></div>
             <ul class="attrList">
-                <li @mouseenter="toggleSeniorDetail('visible', $event)" @mouseleave="toggleSeniorDetail('hidden', $event)">类型<i class="iconfont icon-xiangxia"></i></li>
-                <li>面板<i class="iconfont icon-xiangxia"></i></li>
-                <li>屏幕比例<i class="iconfont icon-xiangxia"></i></li>
-                <li>接口<i class="iconfont icon-xiangxia"></i></li>
-                <li>特性<i class="iconfont icon-xiangxia"></i></li>
-                <li>HDR<i class="iconfont icon-xiangxia"></i></li>
-                <li>响应时间<i class="iconfont icon-xiangxia"></i></li>
-                <li>特征<i class="iconfont icon-xiangxia"></i></li>
-                <li>升降台<i class="iconfont icon-xiangxia"></i></li>
-                <li>支架屏数<i class="iconfont icon-xiangxia"></i></li>
+                <li class="seniorAttr" @mouseenter="toggleSeniorDetail(`seniorDetail${index}`)" @mouseleave="toggleSeniorDetail(`seniorDetail${index}`)"
+                v-for="(item,index) in spuInfo.seniorAttrList" :key="index">
+                {{item.attrName}}
+                <i class="iconfont icon-xiangxia"></i>
+                </li>
             </ul>
-            <div class="seniorDetail" ref="seniorDetail" @mouseenter="toggleSeniorDetail('visible')"
-            @mouseleave="toggleSeniorDetail('hidden')">
+            <div class="seniorDetail" :ref="`seniorDetail${index}`" @mouseenter="toggleSeniorDetail(`seniorDetail${index}`)" @mouseleave="toggleSeniorDetail(`seniorDetail${index}`)" v-for="(item,index) in spuInfo.seniorAttrList" :key="index">
                 <ul>
-                    <li>曲面屏</li>
-                    <li>直面屏</li>
-                    <li>触控屏</li>
-                    <li>大屏显示器</li>
+                    <li v-for="(seniorAttrValue, seniorIndex) in item.attrValues" :key="seniorIndex">{{seniorAttrValue}}</li>
                 </ul>
             </div>
         </div>
@@ -121,8 +56,16 @@
 </template>
 
 <script>
+//引入mixin
+import { routerJump } from '@/mixin/index.js'
+
+//防抖
+import {debounce} from '@/utils'
+
 export default {
     name: "selector",
+    mixins: [routerJump],
+    props: ['spuInfo'],
     data() {
         return {
             multiSelectStatus: false,
@@ -131,36 +74,19 @@ export default {
             seniorAttrlist: []
         }
     },
-    methods:{
-        unflodList(){
-            this.$refs.flodList.classList.toggle('flod');
+    methods: {
+        unflod(targetRef) {
+            this.$refs[targetRef].classList.toggle('unflod');
         },
-        toggleMultiSelect(e){
-            this.unflodList(e);
+        toggleMultiSelect(targetRef) {
+            this.unflod(targetRef);
             this.multiSelectStatus = !this.multiSelectStatus;
         },
-        toggleSeniorDetail(status, e){
-            if(this.seniorDetailTimer == -1){
-                this.seniorDetailTimer = setTimeout(() => {
-                    this.$refs.seniorDetail.style.visibility = status;
-                    this.seniorDetailTimer = -1;
-                    if(status == 'hidden'){
-                        this.seniorAttrlist[this.currentSeniorAttr].style.border = '1px solid #ddd';
-                        this.seniorAttrlist[this.currentSeniorAttr].style.position = 'static';
-                    }else{
-                        this.seniorAttrlist[this.currentSeniorAttr].style.borderBottom = '1px solid #fff';
-                        this.seniorAttrlist[this.currentSeniorAttr].style.borderTop = this.seniorAttrlist[this.currentSeniorAttr].style.borderLeft = this.seniorAttrlist[this.currentSeniorAttr].style.borderRight = '1px solid rgba(0, 0, 0, 0.4)';
-                        this.seniorAttrlist[this.currentSeniorAttr].style.position = 'relative';
-                        this.seniorAttrlist[this.currentSeniorAttr].style.zIndex = 2;
-                    }
-                }, 150);
-            }else{
-                clearTimeout(this.seniorDetailTimer);
-                this.seniorDetailTimer = -1;
-            }
-        }
+        toggleSeniorDetail: debounce(function(refName){
+            this.$refs[refName][0].classList.toggle('unflod');
+        })
     },
-    mounted(){
+    mounted() {
         this.seniorAttrlist = document.querySelectorAll('.senior .attrList li');
     }
 };
@@ -183,6 +109,7 @@ export default {
             background-color: #f3f3f3;
             padding: 10px;
         }
+
         .brandImgContainer {
             display: flex;
             flex-wrap: wrap;
@@ -194,11 +121,15 @@ export default {
             overflow: hidden;
 
             .imgContainer {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
                 width: 150px;
                 height: 50px;
-                text-align: center;
-                border: 1px solid #dddddd;
                 margin: -1px 0 0 -1px;
+
+                border: 1px solid #dddddd;
 
                 img {
                     max-width: 100%;
@@ -228,6 +159,9 @@ export default {
 
     .attribute {
         display: flex;
+
+        height: 40px;
+
         border-top: 1px solid #dddddd;
         border-bottom: 1px solid #dddddd;
 
@@ -239,8 +173,8 @@ export default {
             background-color: #f3f3f3;
             padding: 10px;
         }
-        
-        .listContainer{
+
+        .listContainer {
             overflow: hidden;
             .attributeList {
                 list-style: none;
@@ -259,9 +193,9 @@ export default {
                 }
             }
 
-            .buttons{
+            .buttons {
                 text-align: center;
-                button{
+                button {
                     margin: 5px;
                     font-size: 12px;
                     text-align: center;
@@ -283,7 +217,7 @@ export default {
                 color: #ddd;
             }
 
-            &:hover{
+            &:hover {
                 cursor: pointer;
             }
         }
@@ -301,13 +235,13 @@ export default {
                 color: #ddd;
             }
 
-            &:hover{
+            &:hover {
                 cursor: pointer;
             }
         }
 
-        &.flod {
-            height: 40px;
+        &.unflod {
+            height: auto;
         }
     }
 
@@ -344,6 +278,14 @@ export default {
                     color: #c1c1c1;
                 }
             }
+
+            >.serniorAttr.unflod{
+                position: relative;
+                z-index: 2;
+
+                border: 1px solid rgba(0, 0, 0, 0.4);
+                border-bottom: 1px solid #fff;
+            }
         }
 
         .seniorDetail {
@@ -363,10 +305,17 @@ export default {
                     margin-right: 30px;
                 }
             }
+
+            &.unflod{
+                visibility: visible;
+            }
         }
     }
 }
-[type=checkbox]{
+[type="checkbox"] {
     margin-top: 1px;
+}
+.more:hover {
+    cursor: pointer;
 }
 </style>

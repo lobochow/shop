@@ -1,30 +1,33 @@
 <template>
-    <div class="outside">
-        <div class="inside"></div>
+    <div class="service">
+        <span>精选服务</span>
+        <ul>
+            <li>
+                <dropdown title="5年只换不修" :valueList="['5年只换不修']"></dropdown>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
+import dropdown from '@/components/dropdown'
+
 export default {
-name:'test'
+    name: 'test',
+    components: {dropdown}
 }
 </script>
 
 <style lang="less" scoped>
-.outside{
-    width: 300px;
-    height: 300px;
-    margin-left: 10px;
+.service{
+    display: flex;
 
-    border: 1px solid black;
-}
+    >ul{
+        list-style: none;
 
-.inside{
-    width: 100px;
-    height: 100px;
-    margin-top: auto;
-    margin-bottom: 0px;
-
-    border: 1px solid black;
+        >li{
+            padding: 5px;
+        }
+    }
 }
 </style>

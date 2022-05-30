@@ -1,8 +1,8 @@
 <template>
   <div class="searchPage">
       <searchArea/>
-      <selector/>
-      <spu-list></spu-list>
+      <selector :spuInfo="spus.spuInfo" />
+      <spu-list :spuList="spus.spuList"></spu-list>
   </div>
 </template>
 
@@ -12,9 +12,28 @@ import searchArea from "@/components/searchArea"
 import selector from "@/views/search/selector"
 import spuList from "@/views/search/spuList.vue"
 
+import { getSpuList } from '@/api'
+
 export default {
     name: 'search',
-    components: {topNav, searchArea, selector, spuList}
+    components: {topNav, searchArea, selector, spuList},
+    data() {
+        return {
+            spus: {
+                spuInfo: {},
+                spuList: {}
+            }
+        }
+    },
+    methods: {
+        //获取商品列表
+        async getSpuList() {
+            this.spus = await getSpuList();
+        }
+    },
+    mounted() {
+        this.getSpuList();
+    }
 }
 </script>
 

@@ -1,21 +1,22 @@
 const routerJump = {
     methods: {
-        goHome(){
+        goHome() {
             this.$router.push('/');
         },
-        goSearch(keyword){
+        goSearch(keyword) {
             this.$router.push({
                 path: '/search',
-                query: keyword
+                query: { keyword }
             })
         },
-        goCart(){
+        goCart() {
             this.$router.push('/cart');
         },
-        goBillRecord(){
+
+        goBillRecord() {
             this.$router.push('/billRecord');
         }
     }
 }
 
-export {routerJump}
+export { routerJump }

@@ -46,9 +46,9 @@
 
 <script>
 //引入mixin
-import {routerJump} from '@/mixin/index.js'
+import { routerJump } from '@/mixin/index.js'
 
-import {getCartInfo} from '@/api'
+import { getCartInfo } from '@/api'
 
 export default {
     name: 'searchArea',
@@ -60,7 +60,7 @@ export default {
         }
     },
     methods: {
-        async setCartInfo(){
+        async setCartInfo() {
             this.cartInfo = await getCartInfo();
         }
     },
@@ -165,6 +165,12 @@ export default {
                 i {
                     font-size: 20px;
                     margin-right: 10px;
+                }
+
+                &:hover {
+                    border-color: rgb(225, 37, 27);
+
+                    cursor: pointer;
                 }
             }
 

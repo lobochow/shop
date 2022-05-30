@@ -53,11 +53,7 @@
                   <span>精选服务</span>
                   <ul>
                       <li>
-                          <span>5年只换不修</span>
-                          <div class="list">
-                                  <input type="checkbox">
-                                  <span>5年只换不修</span>
-                          </div>
+                          <dropdown :valueList="['5年只换不修']"></dropdown>
                       </li>
                   </ul>
               </div>
@@ -71,8 +67,11 @@
 </template>
 
 <script>
+import dropdown from '@/components/dropdown.vue'
+
 export default {
 name: 'detail',
+components: {dropdown},
 methods:{
     imgListMoveLeft(){
         let currentLeft = window.getComputedStyle(this.$refs.imgList, null).left;
@@ -332,6 +331,7 @@ methods:{
                 .service{
                     padding: 10px;
                     display: flex;
+                    align-items: center;
 
 
                     >span{
@@ -339,46 +339,9 @@ methods:{
                         color: #999999;
                     }
 
-                    ul{
+                    >ul{
                         list-style: none;
                         display: flex;
-                        li{
-                            font-size: 12px;
-                            position: relative;
-                            margin-left: 10px;
-
-                            >span{
-                                position: relative;
-                                z-index: 2;
-                                padding: 2px;
-                                border: 1px solid #ccc;
-
-                                &:hover{
-                                    border: 1px solid #E2231A;
-                                    border-bottom: 1px solid white;
-
-                                    ~.list{
-                                        visibility: visible;
-                                    }
-                                }
-                            }
-
-                            .list{
-                                position: absolute;
-                                padding: 5px;
-                                display: flex;
-                                margin-top: 2px;
-                                visibility: hidden;
-                                width: 200px;
-                                height: 30px;
-                                border: 1px solid #ccc;
-                                background-color: white;
-
-                                >input{
-                                    margin-top: 2px;
-                                }
-                            }
-                        }
                     }
                 }
 

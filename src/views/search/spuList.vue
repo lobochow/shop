@@ -32,39 +32,17 @@
 </template>
 
 <script>
+
 export default {
     name: 'spuList',
-    data() {
-        return {
-            spuList: []
-        }
-    },
+    props: ['spuList'],
     methods: {
-        //获取商品列表
-        getSpuList() {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        this.spuList = JSON.parse(xhr.responseText);
-                    } else {
-                        console.log('获取spu列表失败：', xhr.statusText);
-                    }
-                }
-            }
-
-            xhr.open('get', '/v1/getSpu', true);
-            xhr.send();
-        },
-        goSpuDetail(id){
+        goSpuDetail(id) {
             this.$router.push({
                 path: '/spuDetail',
-                query: id
+                query: {id}
             })
         }
-    },
-    mounted() { 
-        this.getSpuList();
     }
 }
 </script>

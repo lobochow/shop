@@ -32,3 +32,8 @@ export const getHomeSwiperImg = () => request({
     method: 'get',
     url: '/v1/homeSwiper'
 });
+
+export const getSpuList = () => request({
+    method: 'get',
+    url: '/v1/getSpu'
+});
