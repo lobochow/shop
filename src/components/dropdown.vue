@@ -1,12 +1,12 @@
 <template>
     <div class="dropdown" :style="style">
-        <span>
-            {{title || valueList[0]}}
+        <span class="title">
+            {{title || valueList[0] || null}}
         </span>
-        <div class="dropdownList">
-            <ul>
-                <li>
-                    <input type="checkbox" v-if="checkbox">5年只换不修
+        <div class="dropdownListWrap" :class="size">
+            <ul class="dropdownList">
+                <li v-for="(item, index) in valueList" :key="index">
+                    <input type="checkbox" v-if="checkbox">{{item}}
                 </li>
             </ul>
         </div>
@@ -22,7 +22,8 @@ export default {
             style: {
                 '--titleOffsetX': '',
                 '--titleOffsetY': ''
-            }
+            },
+            size: 'large'
         }
     },
     mounted() {
@@ -49,36 +50,71 @@ export default {
         border: 1px solid @border-gray;
     }
 
-    &:hover {
-        >span{
-            z-index: 1;
+    .dropdownListWrap {
+        position: absolute;
 
-            border-bottom: 1px solid white;
+        left: 0px;
+        top: calc(var(--titleOffsetY) - 1px);
+
+        border: 1px solid @border-gray;
+        background-color: white;
+
+        > ul {
+            list-style: none;
+
+            > li {
+                padding: 2px;
+                white-space: nowrap;
+            }
         }
 
-        > .dropdownList {
+        visibility: hidden;
+
+        &.small{
+            .dropdownList{
+                display: flex;
+                flex-direction: column;
+            }
+        }
+        
+        &.medium{
+            .dropdownList{
+                display: flex;
+                flex-wrap: wrap;
+
+                max-width: 300px;
+
+                >li{
+                    margin-right: 10px;
+                    min-width: 50px;
+                }
+            }         
+        }
+
+        &.large{
+            .dropdownList{
+                display: flex;
+                flex-wrap: wrap;
+
+                max-width: 500px;
+
+                >li{
+                    margin-right: 10px;
+                    min-width: 50px;
+                    flex-grow: 1;
+                }
+            }         
+        }
+    }
+
+    &:hover {
+        >.title{
+            background-color: #F3F3F3;
+        }
+
+        > .dropdownListWrap {
             visibility: visible;
         }
     }
-}
-
-.dropdownList {
-    position: absolute;
-
-    left: 0px;
-    top: calc(var(--titleOffsetY) - 1px);
-
-    border: 1px solid @border-gray;
-
-    > ul {
-        list-style: none;
-
-        > li {
-            padding: 2px;
-            white-space: nowrap;
-        }
-    }
-
-    visibility: hidden;
 }
 </style>

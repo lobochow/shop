@@ -55,7 +55,7 @@ export default {
 
         .current{
             border: none;
-            color: #FF6600;
+            color: rgb(210, 13, 13);
         }
 
         >button{

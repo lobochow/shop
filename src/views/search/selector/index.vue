@@ -39,17 +39,8 @@
 
         <div class="senior">
             <div class="title"><span>高级选项：</span></div>
-            <ul class="attrList">
-                <li class="seniorAttr" @mouseenter="toggleSeniorDetail(`seniorDetail${index}`)" @mouseleave="toggleSeniorDetail(`seniorDetail${index}`)"
-                v-for="(item,index) in spuInfo.seniorAttrList" :key="index">
-                {{item.attrName}}
-                <i class="iconfont icon-xiangxia"></i>
-                </li>
-            </ul>
-            <div class="seniorDetail" :ref="`seniorDetail${index}`" @mouseenter="toggleSeniorDetail(`seniorDetail${index}`)" @mouseleave="toggleSeniorDetail(`seniorDetail${index}`)" v-for="(item,index) in spuInfo.seniorAttrList" :key="index">
-                <ul>
-                    <li v-for="(seniorAttrValue, seniorIndex) in item.attrValues" :key="seniorIndex">{{seniorAttrValue}}</li>
-                </ul>
+            <div class="seniorDetail">
+                <dropdown v-for="(item,index) in spuInfo.seniorAttrList" :key="index" :title="item.attrName" :valueList="item.attrValues"></dropdown>
             </div>
         </div>
     </div>
@@ -62,10 +53,13 @@ import { routerJump } from '@/mixin/index.js'
 //防抖
 import {debounce} from '@/utils'
 
+import dropdown from '@/components/dropdown'
+
 export default {
     name: "selector",
     mixins: [routerJump],
     props: ['spuInfo'],
+    components: {dropdown},
     data() {
         return {
             multiSelectStatus: false,
@@ -92,7 +86,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .selectorContainer {
     width: 1000px;
     margin: 10px auto 0px auto;
@@ -289,25 +283,11 @@ export default {
         }
 
         .seniorDetail {
-            visibility: hidden;
-            position: absolute;
-            left: 0px;
-            top: 39px;
-            width: 1000px;
-            border: 1px solid rgba(0, 0, 0, 0.4);
-            background-color: white;
-            ul {
-                list-style: none;
-                display: flex;
-                li {
-                    color: #005aa0;
-                    padding: 5px;
-                    margin-right: 30px;
-                }
-            }
+            display: flex;
+            align-items: center;
 
-            &.unflod{
-                visibility: visible;
+            >*{
+                margin-left: 10px;
             }
         }
     }
