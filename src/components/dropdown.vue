@@ -3,7 +3,7 @@
         <span class="title">
             {{title || valueList[0] || null}}
         </span>
-        <div class="dropdownListWrap" :class="size">
+        <div class="dropdownListWrap">
             <ul class="dropdownList">
                 <li v-for="(item, index) in valueList" :key="index">
                     <input type="checkbox" v-if="checkbox">{{item}}
@@ -22,8 +22,7 @@ export default {
             style: {
                 '--titleOffsetX': '',
                 '--titleOffsetY': ''
-            },
-            size: 'large'
+            }
         }
     },
     mounted() {
@@ -37,79 +36,43 @@ export default {
 @import "@/styles/variables.less";
 
 .dropdown {
-    position: relative;
-    display: flex;
-
     font-size: 12px;
 
     > span {
-        position: relative;
-
         padding: 2px;
 
         border: 1px solid @border-gray;
     }
 
     .dropdownListWrap {
+        visibility: hidden;
         position: absolute;
-
-        left: 0px;
-        top: calc(var(--titleOffsetY) - 1px);
 
         border: 1px solid @border-gray;
         background-color: white;
 
-        > ul {
+        transform: translateY(2px);
+
+        .dropdownList {
+            display: flex;
+            flex-wrap: wrap;
+
+            max-width: 300px;
+
             list-style: none;
 
             > li {
+                margin-right: 10px;
                 padding: 2px;
+
                 white-space: nowrap;
             }
-        }
-
-        visibility: hidden;
-
-        &.small{
-            .dropdownList{
-                display: flex;
-                flex-direction: column;
-            }
-        }
-        
-        &.medium{
-            .dropdownList{
-                display: flex;
-                flex-wrap: wrap;
-
-                max-width: 300px;
-
-                >li{
-                    margin-right: 10px;
-                    min-width: 50px;
-                }
-            }         
-        }
-
-        &.large{
-            .dropdownList{
-                display: flex;
-                flex-wrap: wrap;
-
-                max-width: 500px;
-
-                >li{
-                    margin-right: 10px;
-                    min-width: 50px;
-                    flex-grow: 1;
-                }
-            }         
         }
     }
 
     &:hover {
-        >.title{
-            background-color: #F3F3F3;
+        > .title {
+            background-color: #f3f3f3;
         }
 
         > .dropdownListWrap {

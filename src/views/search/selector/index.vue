@@ -13,29 +13,7 @@
             </div>
         </div>
 
-        <div class="attribute" :ref="`attribute${index}`" v-for="(item, index) in spuInfo.attrList" :key="index">
-            <span class="title">{{item.attrName}}：</span>
-            <div class="listContainer">
-                <ul class="attributeList">
-                    <li v-for="(attrVaule, valueIndex) in item.attrValues" :key="valueIndex">
-                        <input type="checkbox" v-show="multiSelectStatus">
-                        {{attrVaule}}
-                    </li>
-                </ul>
-                <div class="buttons">
-                    <button>确定</button>
-                    <button @click="toggleMultiSelect(`attribute${index}}`)">取消</button>
-                </div>
-            </div>
-            <div class="more" @click="unflod(`attribute${index}}`)" v-show="!multiSelectStatus">
-                更多
-                <i class="iconfont icon-xiangxia"></i>
-            </div>
-            <div class="multiSelect" @click="toggleMultiSelect(`attribute${index}}`)" v-show="!multiSelectStatus">
-                多选
-                <i class="iconfont icon-xiangxia"></i>
-            </div>
-        </div>
+        <normalAttrRow v-for="(item, index) in spuInfo.attrList" :key="index" :title="item.attrName" :attrList="item.attrValues" />
 
         <div class="senior">
             <div class="title"><span>高级选项：</span></div>
@@ -51,15 +29,17 @@
 import { routerJump } from '@/mixin/index.js'
 
 //防抖
-import {debounce} from '@/utils'
+import { debounce } from '@/utils'
 
 import dropdown from '@/components/dropdown'
+
+import normalAttrRow from '@/views/search/selector/normalAttrRow'
 
 export default {
     name: "selector",
     mixins: [routerJump],
     props: ['spuInfo'],
-    components: {dropdown},
+    components: { dropdown, normalAttrRow },
     data() {
         return {
             multiSelectStatus: false,
@@ -76,7 +56,7 @@ export default {
             this.unflod(targetRef);
             this.multiSelectStatus = !this.multiSelectStatus;
         },
-        toggleSeniorDetail: debounce(function(refName){
+        toggleSeniorDetail: debounce(function (refName) {
             this.$refs[refName][0].classList.toggle('unflod');
         })
     },
@@ -151,98 +131,9 @@ export default {
         }
     }
 
-    .attribute {
-        display: flex;
-
-        height: 40px;
-
-        border-top: 1px solid #dddddd;
-        border-bottom: 1px solid #dddddd;
-
-        .title {
-            font-size: 12px;
-            font-weight: bold;
-            width: 100px;
-            flex-shrink: 0;
-            background-color: #f3f3f3;
-            padding: 10px;
-        }
-
-        .listContainer {
-            overflow: hidden;
-            .attributeList {
-                list-style: none;
-                width: 800px;
-                background-color: white;
-                display: flex;
-                flex-wrap: wrap;
-                li {
-                    display: flex;
-                    align-items: center;
-                    padding: 10px;
-                    min-width: 150px;
-                    white-space: nowrap;
-                    font-size: 12px;
-                    color: #005aa0;
-                }
-            }
-
-            .buttons {
-                text-align: center;
-                button {
-                    margin: 5px;
-                    font-size: 12px;
-                    text-align: center;
-                    width: 40px;
-                }
-            }
-        }
-
-        .more {
-            font-size: 12px;
-            border: 1px solid #dddddd;
-            flex-shrink: 0;
-            align-self: flex-start;
-            padding: 3px;
-            margin: 7px;
-            user-select: none;
-
-            i {
-                color: #ddd;
-            }
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        .multiSelect {
-            font-size: 12px;
-            border: 1px solid #dddddd;
-            flex-shrink: 0;
-            align-self: flex-start;
-            padding: 3px;
-            margin: 7px;
-            user-select: none;
-
-            i {
-                color: #ddd;
-            }
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        &.unflod {
-            height: auto;
-        }
-    }
-
     .senior {
         display: flex;
         font-size: 12px;
-        border-bottom: 1px solid #dddddd;
         position: relative;
 
         .title {
@@ -273,7 +164,7 @@ export default {
                 }
             }
 
-            >.serniorAttr.unflod{
+            > .serniorAttr.unflod {
                 position: relative;
                 z-index: 2;
 
@@ -286,7 +177,7 @@ export default {
             display: flex;
             align-items: center;
 
-            >*{
+            > * {
                 margin-left: 10px;
             }
         }
