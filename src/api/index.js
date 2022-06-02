@@ -37,3 +37,8 @@ export const getSpuList = () => request({
     method: 'get',
     url: '/v1/getSpu'
 });
+
+export const reqSkuInfo = () => request({
+    method: 'get',
+    url: '/v1/getSkuInfo'
+})
