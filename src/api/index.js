@@ -42,3 +42,8 @@ export const reqSkuInfo = () => request({
     method: 'get',
     url: '/v1/getSkuInfo'
 })
+
+export const reqCartInfo = () => request({
+    method: 'get',
+    url: '/v1/getCartInfo'
+})
