@@ -47,3 +47,8 @@ export const reqCartInfo = () => request({
     method: 'get',
     url: '/v1/getCartInfo'
 })
+
+export const reqPayBillInfo = () => request({
+    method: 'get',
+    url: '/v1/getPayBillInfo'
+})

@@ -13,6 +13,10 @@ const routerJump = {
             this.$router.push('/cart');
         },
 
+        goPayBill() {
+            this.$router.push('/payBill');
+        },
+
         goBillRecord() {
             this.$router.push('/billRecord');
         }

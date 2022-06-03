@@ -63,7 +63,7 @@
                     <span>
                         <span>已选择0件商品</span>
                         <span>总价：¥0.00</span>
-                        <span>去结算</span>
+                        <span @click="goPayBill">去结算</span>
                     </span>
                 </div>
             </div>
@@ -75,9 +75,11 @@
 import topNav from "@/components/topNav"
 import searchArea from "@/components/searchArea"
 import { reqCartInfo } from '@/api/index.js'
+import { routerJump } from '@/mixin/index.js'
 
 export default {
     name: 'cart',
+    mixins: [routerJump],
     components: { topNav, searchArea },
     data() {
         return {
