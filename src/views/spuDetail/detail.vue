@@ -4,37 +4,47 @@
             <zoomSwiper :swiperImgs="skuInfo.swiperImgs" />
 
             <div class="rightArea">
-                <h5>微星（MSI）万图师 GeForce RTX 2060 VENTUS 12G OC 超频版 电竞游戏设计专业电脑显卡</h5>
+                <h5>{{skuInfo.description}}</h5>
                 <div class="price">
                     <span>京东价</span>
-                    <span>¥2699.00</span>
+                    <span>¥{{skuInfo.price}}</span>
                     <span>降价通知</span>
                     <div>
                         <p>累计评价</p>
-                        <p>10万+</p>
+                        <p>{{skuInfo.commentNum}}万+</p>
                     </div>
                 </div>
                 <p class="weight">
                     <span>重量</span>
-                    <span>1.16kg</span>
+                    <span>{{skuInfo.weight}}kg</span>
                 </p>
                 <div class="skuList">
-                    <span>选择型号</span>
+                    <div>选择型号</div>
                     <ul>
-                        <li>
-                            <img src="@/assets/images/spuImg/iphone2.png" alt="sku">
-                            <span>123123</span>
+                        <li v-for="(skuItem,index) in skuInfo.skuList" :key="index">
+                            <div class="imgWrap"><img :src="skuItem.skuSmallImg" alt="sku"></div>
+                            <span>{{skuItem.skuBriefInfo}}</span>
                         </li>
                     </ul>
                 </div>
                 <div class="service">
                     <span>精选服务</span>
                     <ul>
-                        <li>
-                            <dropdown :valueList="['5年只换不修']"></dropdown>
+                        <li v-for="(skuServiceItem, index) in skuInfo.skuService" :key="index">
+                            <dropdown :valueList="skuServiceItem"></dropdown>
                         </li>
                     </ul>
                 </div>
+
+                <div class="shopService">
+                    <span>京东服务</span>
+                    <ul>
+                        <li v-for="(shopServiceItem, index) in skuInfo.shopService" :key="index">
+                            <dropdown :valueList="shopServiceItem"></dropdown>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="addCart">
                     <input type="number" value="1" min="1" max="10">
                     <span>加入购物车</span>
@@ -47,7 +57,7 @@
 <script>
 import dropdown from '@/components/dropdown.vue'
 
-import {reqSkuInfo} from '@/api/index.js'
+import { reqSkuInfo } from '@/api/index.js'
 
 import zoomSwiper from '@/views/spuDetail/zoomSwiper'
 
@@ -65,15 +75,17 @@ export default {
             this.skuInfo = reqSkuInfo();
         }
     },
-    mounted(){
+    mounted() {
         this.getSkuInfo();
-        
+
     }
 
 }
 </script>
 
 <style lang="less">
+@import "@/styles/variables.less";
+
 .detailWrap {
     width: 100%;
     min-width: 1000px;
@@ -89,17 +101,15 @@ export default {
             width: 550px;
             height: 400px;
 
-            > :not(:nth-child(1)) {
-                margin-top: 10px;
-            }
-
             h5 {
                 color: #666666;
             }
 
             .price {
-                background-color: #f3f3f3;
+                margin-top: 10px;
                 padding: 10px;
+
+                background-color: #f3f3f3;
                 > :nth-child(1) {
                     font-size: 10px;
                     letter-spacing: 5px;
@@ -143,32 +153,62 @@ export default {
             }
 
             .skuList {
-                padding: 10px;
-                font-size: 10px;
                 display: flex;
                 align-items: center;
+
+                padding: 10px;
+
+                font-size: 10px;
+
                 > :nth-child(1) {
+                    flex-shrink: 0;
+
                     color: #999999;
                     vertical-align: middle;
                 }
 
                 ul {
-                    margin: 0px;
-                    padding-left: 10px;
-                    list-style: none;
                     display: flex;
                     align-items: center;
+                    flex-wrap: wrap;
+
+                    margin: 0px;
+                    padding-left: 10px;
+                    max-width: 100%;
+
+                    list-style: none;
 
                     li {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+
                         border: #cccccc 1px solid;
-                        img {
-                            max-width: 30px;
-                            max-height: 30px;
-                            vertical-align: middle;
+                        background-color: @bg-gray;
+
+                        > .imgWrap {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            width: 30px;
+                            height: 30px;
+
+                            background-color: white;
+
+                            > img {
+                                max-width: 30px;
+                                max-height: 30px;
+                                vertical-align: middle;
+                            }
                         }
 
                         span {
                             margin: 0px 10px;
+                            flex-shrink: 0;
                         }
 
                         &:hover {
@@ -178,7 +218,7 @@ export default {
                 }
             }
 
-            .service {
+            .service, .shopService {
                 padding: 10px;
                 display: flex;
                 align-items: center;
@@ -189,13 +229,21 @@ export default {
                 }
 
                 > ul {
-                    list-style: none;
                     display: flex;
+
+                    padding-left: 10px;
+
+                    list-style: none;
+
+                    > li {
+                        margin-right: 10px;
+                    }
                 }
             }
 
             .addCart {
                 margin-left: 10px;
+                margin-top: 40px;
 
                 > input {
                     font-size: 32px;
