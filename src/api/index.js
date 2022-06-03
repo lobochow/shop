@@ -52,3 +52,8 @@ export const reqPayBillInfo = () => request({
     method: 'get',
     url: '/v1/getPayBillInfo'
 })
+
+export const reqBillRecord = () => request({
+    method: 'get',
+    url: '/v1/getBillRecordInfo'
+})

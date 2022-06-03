@@ -19,6 +19,10 @@ const routerJump = {
 
         goBillRecord() {
             this.$router.push('/billRecord');
+        },
+
+        goComment() {
+            this.$router.push('/comment');
         }
     }
 }
