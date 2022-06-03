@@ -122,13 +122,13 @@
             </div>
         </div>
         <div class="payMsg" v-show="showPay">
-            <dir class="dialog">
+            <div class="dialog">
                 <div>二维码</div>
                 <div>
                     <button @click="togglePay">取消</button>
                     <button @click="goBillRecord">支付完成</button>
                 </div>
-            </dir>
+            </div>
         </div>
     </div>
 </template>
