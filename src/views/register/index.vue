@@ -62,7 +62,14 @@
 
 <script>
 export default {
-    name: 'register'
+    name: 'register',
+    data() {
+        return {
+            phone: '',
+            account: '',
+            password: ''
+        }
+    },
 }
 </script>
 

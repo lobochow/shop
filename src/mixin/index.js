@@ -23,6 +23,10 @@ const routerJump = {
 
         goComment() {
             this.$router.push('/comment');
+        },
+
+        goRegister(){
+            this.$router.push('/register');
         }
     }
 }

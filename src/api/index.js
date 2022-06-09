@@ -4,7 +4,12 @@ export function request(options){
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    resolve(JSON.parse(xhr.responseText));
+                    let contentType = xhr.getResponseHeader('Content-Type');
+                    if(contentType.indexOf('svg') == -1){
+                        resolve(JSON.parse(xhr.responseText));
+                    }else{
+                        resolve(xhr.responseText);
+                    }
                 } else {
                     reject(new Error(xhr.status + ':' + xhr.statusText));
                 }
@@ -13,7 +18,7 @@ export function request(options){
     })
 
     xhr.open(options.method, options.url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('Content-Type', options['Content-Type'] ?? 'application/json')
     xhr.send(JSON.stringify(options.body));
 
     return result;
@@ -21,7 +26,7 @@ export function request(options){
 
 export const getCategoryList = () => request({
     method: 'get',
-    url: 'http://127.0.0.1:8088/v1/categorys'
+    url: '/v1/categorys'
 });
 
 export const getCartInfo = () => request({
@@ -31,7 +36,7 @@ export const getCartInfo = () => request({
 
 export const getHomeSwiperImg = () => request({
     method: 'get',
-    url: 'http://127.0.0.1:8088/v1/homeSwiper'
+    url: '/v1/homeSwiper'
 });
 
 export const getSpuList = () => request({
@@ -58,3 +63,21 @@ export const reqBillRecord = () => request({
     method: 'get',
     url: '/mock/1027634/v1/getBillRecordInfo'
 })
+
+export const getRegisterVerifyCode = () => request({
+    method: 'get',
+    url: '/v1/register-verify'
+})
+
+export const postRegisterVerifyCode = (body) => request({
+    method: 'post',
+    url: '/v1/register-verify',
+    body
+})
+
+export const postRegister = (body) => request({
+    method: 'post',
+    url: '/v1/register',
+    body
+})
+

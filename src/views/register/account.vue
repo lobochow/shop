@@ -3,7 +3,7 @@
         <div class="account pass error">
             <div class="wrap">
                 <label for="account">用户名</label>
-                <input type="text" id="account">
+                <input type="text" id="account" v-model="account">
                 <i class="iconfont icon-duigou1"></i>
             </div>
             <p class="errorMsg">错误提醒</p>
@@ -11,7 +11,7 @@
         <div class="password1">
             <div class="wrap">
                 <label for="password1">设置密码</label>
-                <input type="password" id="password1">
+                <input type="password" id="password1" v-model="password">
                 <i class="iconfont icon-duigou1"></i>
             </div>
             <p class="errorMsg">错误提醒</p>
@@ -19,20 +19,46 @@
         <div class="password2">
             <div class="wrap">
                 <label for="password2">确认密码</label>
-                <input type="password" id="password2">
+                <input type="password" id="password2" v-model="passwordConfirm">
                 <i class="iconfont icon-duigou1"></i>
             </div>
             <p class="errorMsg">错误提醒</p>
         </div>
-        <div class="goRegister">
+        <div class="goRegister" @click="goRegister">
             立即注册
         </div>
     </div>
 </template>
 
 <script>
+import {postRegister} from '@/api'
+
 export default {
-    name: 'register-Account'
+    name: 'register-Account',
+    data() {
+        return {
+            account: '',
+            password: '',
+            passwordConfirm: ''
+        }
+    },
+    methods: {
+        async goRegister(){
+            let result = await postRegister({
+                phone: this.$parent.phone,
+                account: this.account,
+                password: this.password
+            })
+            if(result.code == 200){
+                this.$router.push('/register/complete');
+            }else{
+                this.$message({
+                    message: result.msg,
+                    type: 'warning'
+                })
+            }
+        }
+    },
 }
 </script>
 

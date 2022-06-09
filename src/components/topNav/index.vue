@@ -8,7 +8,7 @@
             <div class="userNav">
                 <div class="acount">
                     <span>你好，请登录</span>
-                    <span>免费注册</span>
+                    <span @click="goRegister">免费注册</span>
                 </div>
                 <span @click="goBillRecord">我的订单</span>
                 <span>我的购物车</span>
