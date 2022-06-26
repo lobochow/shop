@@ -2,7 +2,7 @@
     <div class="area1">
         <div class="category" @mouseleave="toggleCate2List(-1)">
             <div v-for="(cate_1, index) in cates_1" :key="index" @mouseenter="toggleCate2List(index)" class="c1wrap">
-                <span class="cate1" v-for="(c1name, index2) in cate_1.c1names" :key="index2" @click="goSearch(c1name)">{{c1name}}</span>
+                <span class="cate1" v-for="(c1name, index2) in cate_1.c1names" :key="index2" @click="goSearch({keyword: c1name})">{{c1name}}</span>
             </div>
         </div>
 

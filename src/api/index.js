@@ -17,8 +17,20 @@ export function request(options){
         }
     })
 
+    if(options.query){
+        let urlAppend = '?';
+        for(let key in options.query){
+            urlAppend += `${key}=${options.query[key]}&`;
+        }
+        options.url += urlAppend;
+    }
+
     xhr.open(options.method, options.url, true);
-    xhr.setRequestHeader('Content-Type', options['Content-Type'] ?? 'application/json')
+    xhr.setRequestHeader('Content-Type', options['Content-Type'] ?? 'application/json');
+    let token = localStorage.getItem('lobo-shop-token');
+    if(token){
+        xhr.setRequestHeader('token', token);
+    }
     xhr.send(JSON.stringify(options.body));
 
     return result;
@@ -31,7 +43,7 @@ export const getCategoryList = () => request({
 
 export const getCartInfo = () => request({
     method: 'get',
-    url: '/mock/1027634/v1/getCart'
+    url: '/v1/cart'
 });
 
 export const getHomeSwiperImg = () => request({
@@ -39,14 +51,16 @@ export const getHomeSwiperImg = () => request({
     url: '/v1/homeSwiper'
 });
 
-export const getSpuList = () => request({
+export const reqSpuInfo = (query) => request({
     method: 'get',
-    url: '/mock/1027634/v1/getSpu'
-});
+    url: '/v1/spu',
+    query
+})
 
-export const reqSkuInfo = () => request({
+export const reqSkuInfo = (query) => request({
     method: 'get',
-    url: '/mock/1027634/v1/getSkuInfo'
+    url: '/v1/sku',
+    query
 })
 
 export const reqCartInfo = () => request({
@@ -81,3 +95,19 @@ export const postRegister = (body) => request({
     body
 })
 
+export const postLogin = (body) => request({
+    method: 'post',
+    url: '/v1/login',
+    body
+})
+
+export const getUserInfo = () => request({
+    method: 'get',
+    url: '/v1/userInfo',
+})
+
+export const getSearchInfo = (query) => request({
+    method: 'get',
+    url: '/v1/search',
+    query
+})

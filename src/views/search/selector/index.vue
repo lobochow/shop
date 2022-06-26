@@ -1,6 +1,6 @@
 <template>
     <div class="selectorContainer">
-        <div class="brand">
+        <!-- <div class="brand">
             <span class="title">品牌：</span>
             <div class="brandImgContainer" ref="brandImgContainer">
                 <div class="imgContainer" v-for="(item,index) in spuInfo.brandInfo" :key="index">
@@ -11,16 +11,23 @@
                 更多
                 <i class="iconfont icon-xiangxia"></i>
             </div>
+        </div> -->
+        <div class="selectedAttrList" v-show="selectedAttrList.length != 0">
+            筛选：
+            <span class="selectedAttr" v-for="(attr, index) in selectedAttrList" :key="index">
+                {{attr.attrValue}}
+                <i class="iconfont icon-shanchuyixuanqunchengyuanchacha" @click="unselectAttr(index, attr)"></i>
+            </span>
         </div>
 
-        <normalAttrRow v-for="(item, index) in spuInfo.attrList" :key="index" :title="item.attrName" :attrList="item.attrValues" />
+        <normalAttrRow v-show="!attrSelectStatus[index]" v-for="(item, index) in spuInfo" :key="index" :title="item.attrName" :attrList="item.attrValues" @selectAttr="value => selectAttr(index, item.attrName, value)" />
 
-        <div class="senior">
+        <!-- <div class="senior">
             <div class="title"><span>高级选项：</span></div>
             <div class="seniorDetail">
                 <dropdown v-for="(item,index) in spuInfo.seniorAttrList" :key="index" :title="item.attrName" :valueList="item.attrValues"></dropdown>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -45,7 +52,14 @@ export default {
             multiSelectStatus: false,
             seniorDetailTimer: -1,
             currentSeniorAttr: 0,
-            seniorAttrlist: []
+            seniorAttrlist: [],
+            selectedAttrList: [
+                // {
+                //     index: 0,
+                //     attrValue: '属性值1'
+                // }
+            ],
+            attrSelectStatus: []
         }
     },
     methods: {
@@ -58,7 +72,44 @@ export default {
         },
         toggleSeniorDetail: debounce(function (refName) {
             this.$refs[refName][0].classList.toggle('unflod');
-        })
+        }),
+        selectAttr(index, name, value){
+            let query = {...this.$route.query};
+            query[name] = value;
+
+            this.goSearch(query);
+            this.$parent.getSpuList();
+        },
+        unselectAttr(selectedIndex, attr){
+            let query = {...this.$route.query};
+            console.log(attr.attrName);
+            delete query[attr.attrName];
+
+            console.log(query);
+
+            this.goSearch(query);
+            this.$parent.getSpuList();
+        }
+    },
+    watch: {
+        spuInfo(newValue){
+            this.attrSelectStatus = [];
+            this.selectedAttrList = [];
+            let selectedAttrListFromQuery = this.$route.query;
+            delete selectedAttrListFromQuery.keyword;
+            newValue.forEach( (attr, index) => {
+                if(selectedAttrListFromQuery[attr.attrName]){
+                    this.attrSelectStatus.push(true);
+                    this.selectedAttrList.push({
+                        index,
+                        attrName: attr.attrName,
+                        attrValue: selectedAttrListFromQuery[attr.attrName]
+                    })
+                }else{
+                    this.attrSelectStatus.push(false);
+                }
+            })
+        }
     },
     mounted() {
         this.seniorAttrlist = document.querySelectorAll('.senior .attrList li');
@@ -127,6 +178,26 @@ export default {
 
             i {
                 color: #ddd;
+            }
+        }
+    }
+
+    .selectedAttrList{
+        margin: 10px 0px 10px 0px;
+        font-size: 10px;
+
+        > .selectedAttr{
+            padding: 2px 5px;
+            margin-left: 10px;
+
+            border: 1px solid black;
+
+            > i{
+                vertical-align: bottom;
+
+                &:hover{
+                    cursor: pointer;
+                }
             }
         }
     }

@@ -2,7 +2,7 @@
     <div class="swiperWrap">
         <div class="swiper">
             <swiperItem v-for="(img, index) in imgList" :key="index">
-                <img :src="img.picUrl" alt="homeSwiperPic" />
+                <img :src="img.url" alt="homeSwiperPic" />
             </swiperItem>
         </div>
         <div class="picControl">

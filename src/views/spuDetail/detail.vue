@@ -1,33 +1,39 @@
 <template>
     <div class="detailWrap">
         <div class="detail">
-            <zoomSwiper :swiperImgs="skuInfo.swiperImgs" />
+            <zoomSwiper :swiperImgs="currentSpuInfo.swipers" />
 
             <div class="rightArea">
-                <h5>{{skuInfo.description}}</h5>
+                <h5>{{currentSpuInfo.title}}</h5>
                 <div class="price">
                     <span>京东价</span>
-                    <span>¥{{skuInfo.price}}</span>
+                    <span>¥{{currentSpuInfo.price}}</span>
                     <span>降价通知</span>
                     <div>
                         <p>累计评价</p>
-                        <p>{{skuInfo.commentNum}}万+</p>
+                        <p>1万+</p>
                     </div>
                 </div>
                 <p class="weight">
                     <span>重量</span>
-                    <span>{{skuInfo.weight}}kg</span>
+                    <span>{{currentSpuInfo.weight}}kg</span>
                 </p>
-                <div class="skuList">
-                    <div>选择型号</div>
+
+                <div class="skuList" v-for="(attr, index) in attrList" :key="index">
+                    <div>{{attr.attrName}}</div>
                     <ul>
-                        <li v-for="(skuItem,index) in skuInfo.skuList" :key="index">
-                            <div class="imgWrap"><img :src="skuItem.skuSmallImg" alt="sku"></div>
-                            <span>{{skuItem.skuBriefInfo}}</span>
+                        <li v-for="(attrValueItem,index) in attr.attrValues" :key="index"
+                            :class="{'selectedAttr': isAttrSelected(attr.attrName, attrValueItem.value), 'disableSelect': !attrValueItem.selectable}"
+                            @click="attrClick(attr.attrName, attrValueItem.value, $event)">
+                            <!-- 缩略图
+                                <div class="imgWrap"><img :src="skuItem.skuSmallImg" alt="sku"></div>
+                             -->
+                            <span>{{attrValueItem.value}}</span>
                         </li>
                     </ul>
                 </div>
-                <div class="service">
+
+                <!-- <div class="service">
                     <span>精选服务</span>
                     <ul>
                         <li v-for="(skuServiceItem, index) in skuInfo.skuService" :key="index">
@@ -43,7 +49,7 @@
                             <dropdown :valueList="shopServiceItem"></dropdown>
                         </li>
                     </ul>
-                </div>
+                </div> -->
 
                 <div class="addCart">
                     <input type="number" value="1" min="1" max="10">
@@ -57,7 +63,7 @@
 <script>
 import dropdown from '@/components/dropdown.vue'
 
-import { reqSkuInfo } from '@/api/index.js'
+import { reqSkuInfo, reqSpuInfo } from '@/api/index.js'
 
 import zoomSwiper from '@/views/spuDetail/zoomSwiper'
 
@@ -66,18 +72,145 @@ export default {
     components: { dropdown, zoomSwiper },
     data() {
         return {
-            skuInfo: {}
+            skuInfo: {},
+            currentSpuInfo: {},
+            attrList: [],
+            selectedAttr: [],
         }
     },
     methods: {
-        getSkuInfo() {
-            let id = this.$route.query.id;
-            this.skuInfo = reqSkuInfo();
+        getTitle(spuInfo) {
+            let result = this.skuInfo.description;
+
+            spuInfo.attrList.forEach(attrItem => {
+                result += `-${attrItem.attrValue}`;
+            })
+
+            return result;
+        },
+        async init() {
+            await this.getSkuInfo();
+            await this.getCurrentSpuInfo();
+            this.attrFilter();
+        },
+        async getSkuInfo() {
+            let sku_id = this.$route.query.sku_id;
+            let result = await reqSkuInfo({ sku_id });
+            this.skuInfo = result.data[0];
+
+            this.getAttrList(this.skuInfo);
+        },
+        async getCurrentSpuInfo() {
+            let _id = this.$route.query._id;
+            let result = await reqSpuInfo({ _id });
+            this.currentSpuInfo = result.data[0];
+            this.currentSpuInfo.title = this.getTitle(this.currentSpuInfo);
+
+            this.currentSpuInfo.attrList.forEach(attr => {
+                if (attr.attrName !== '品牌') {
+                    this.selectedAttr.push({
+                        attrName: attr.attrName,
+                        attrValue: attr.attrValue
+                    });
+                }
+            })
+
+            this.attrFilter();
+        },
+        getAttrList(skuInfo) {
+            skuInfo.attrList.forEach(attr => {
+                let attrShowItem = { attrName: attr, attrValues: [] };
+
+                skuInfo.spuList.forEach(spu => {
+                    spu.attrList.forEach(spuAttr => {
+                        if (spuAttr.attrName === attr && attrShowItem.attrValues.every(attrItem => attrItem.value !== spuAttr.attrValue)) {
+                            attrShowItem.attrValues.push({
+                                value: spuAttr.attrValue,
+                                selectable: true
+                            });
+                        }
+                    })
+                })
+
+                if (attrShowItem.attrValues.length !== 0 && attrShowItem.attrName !== '品牌') {
+                    this.attrList.push(attrShowItem);
+                }
+            })
+        },
+        isAttrSelected(attrName, attrValue) {
+            let result = false;
+            let attrItem = this.selectedAttr.find(item => item.attrName === attrName);
+            if (attrItem && attrItem.attrValue === attrValue) {
+                result = true;
+            }
+            return result;
+        },
+        attrFilter() {
+            //设定测试条件
+            //this.selectedAttr = [{ attrName: '机身内存', attrValue: '128G' }];
+
+            this.attrList.forEach(attrItem => {
+                attrItem.attrValues.forEach(attrValueItem => {
+                    attrValueItem.selectable = false;
+                })
+            })
+
+            //this.attrList.splice(0, 0);
+
+            let spuList = this.skuInfo.spuList;
+            let filterSpus = [];
+
+            for (let i = 0; i < spuList.length; i++) {
+                try {
+                    this.selectedAttr.forEach(selectedAttrItem => {
+                        spuList[i].attrList.forEach(spuAttrItem => {
+                            if (spuAttrItem.attrName === selectedAttrItem.attrName && spuAttrItem.attrValue !== selectedAttrItem.attrValue) {
+
+                                throw new Error('跳出循环');
+                            }
+                        })
+                    })
+
+                    //添加符合要求的spu
+                    filterSpus.push(spuList[i]);
+                } catch (error) {
+                    //console.log(error);
+                }
+            }
+
+            filterSpus.forEach(filterSpu => {
+                filterSpu.attrList.forEach(attrItem => {
+                    let attrRow = this.attrList.find(oneOfAllAttrItem => oneOfAllAttrItem.attrName === attrItem.attrName);
+                    if (attrRow) {
+                        attrRow.attrValues.find(row => row.value === attrItem.attrValue).selectable = true;
+                    }
+                })
+            })
+
+            if (filterSpus.length === 1 && this.selectedAttr.length === this.attrList.length) {
+                this.currentSpuInfo = filterSpus[0];
+            }
+        },
+        attrClick(attrName, attrValue, e) {
+            //console.log(e.path);
+            if (e.currentTarget.classList.contains('disableSelect')) {
+                //console.log('disableSelect');
+            } else if (e.currentTarget.classList.contains('selectedAttr')) {
+                e.currentTarget.classList.remove('selectedAttr');
+                let deleteIndex = this.selectedAttr.findIndex(selectedAttrItem => selectedAttrItem.attrName === attrName);
+                delete this.selectedAttr.splice(deleteIndex, 1);
+                this.attrFilter();
+            } else {
+                this.selectedAttr.push({
+                    attrName,
+                    attrValue
+                })
+                this.attrFilter();
+            }
         }
     },
     mounted() {
-        this.getSkuInfo();
-
+        this.init();
     }
 
 }
@@ -154,7 +287,6 @@ export default {
 
             .skuList {
                 display: flex;
-                align-items: center;
 
                 padding: 10px;
 
@@ -211,14 +343,22 @@ export default {
                             flex-shrink: 0;
                         }
 
-                        &:hover {
+                        &:hover,
+                        &.selectedAttr {
                             border: #e2231a 1px solid;
+                        }
+
+                        &.disableSelect {
+                            cursor: not-allowed;
+                            border: #999999 1px dotted;
+                            color: #ccc;
                         }
                     }
                 }
             }
 
-            .service, .shopService {
+            .service,
+            .shopService {
                 padding: 10px;
                 display: flex;
                 align-items: center;

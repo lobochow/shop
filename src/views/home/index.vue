@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <top-nav></top-nav>
         <header>
             <!-- 搜索框区域 -->
             <searchArea />

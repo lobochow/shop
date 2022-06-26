@@ -1,18 +1,18 @@
 <template>
     <div class="spuListWrap">
-        <div class="spuItem" v-for="(item, index) in spuList" :key="index" @click="goSpuDetail(item.id)">
+        <div class="spuItem" v-for="(item, index) in spuList" :key="index" @click="goSpuDetail(item._id, item.sku_id)">
             <div class="imgWrap">
-                <img :src="item.posterUrl" alt="iphone">
+                <img :src="item.swipers[0].url" alt="iphone">
             </div>
             <div class="priceWrap">
                 <span>¥{{item.price}}</span>
             </div>
             <div class="descriptionWrap">
-                <span>{{item.title}}</span>
+                <span>{{getTitle(item)}}</span>
             </div>
-            <div class="commentsNumWrap">
+            <!-- <div class="commentsNumWrap">
                 <span><b>{{item.commentCount}}</b>条评价</span>
-            </div>
+            </div> -->
             <div class="operateWrap">
                 <div class="compare">
                     <input type="checkbox">
@@ -37,11 +37,20 @@ export default {
     name: 'spuList',
     props: ['spuList'],
     methods: {
-        goSpuDetail(id) {
+        goSpuDetail(_id, sku_id) {
             this.$router.push({
                 path: '/spuDetail',
-                query: {id}
+                query: {_id, sku_id}
             })
+        },
+        getTitle(spuInfo){
+            let result = spuInfo.skuInfo.description;
+
+            spuInfo.attrList.forEach(attrItem => {
+                result += `-${attrItem.attrValue}`;
+            })
+
+            return result;
         }
     }
 }

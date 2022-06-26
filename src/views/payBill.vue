@@ -1,5 +1,6 @@
 <template>
     <div>
+        <top-nav></top-nav>
         <div class="billWrap">
             <div class="billContainer">
                 <p>填写并核对订单信息</p>

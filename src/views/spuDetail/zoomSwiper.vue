@@ -1,7 +1,7 @@
 <template>
     <div class="leftArea">
         <div class="showImg" @mousemove="zoomImg">
-            <img :src="showImgInfo.imgUrl" :alt="showImgInfo.alt">
+            <img :src="showImgInfo.url" :alt="showImgInfo.name">
             <div class="zoomArea" ref="zoomArea"></div>
         </div>
         <div class="selectImg">
@@ -9,14 +9,14 @@
 
             <div class="imgListWrap">
                 <ul class="imgList" :style="imgListStyle">
-                    <li v-for="(swiperItem, index) in swiperImgs" :key="index" @click="changeCurrentImg(index)"><img :src="swiperItem.imgUrl" :alt="swiperItem.alt"></li>
+                    <li v-for="(swiperItem, index) in swiperImgs" :key="index" @click="changeCurrentImg(index)"><img :src="swiperItem.url" :alt="swiperItem.name"></li>
                 </ul>
             </div>
 
             <i class="iconfont icon-xiangyou1" @click="imgListMoveRight"></i>
         </div>
         <div class="imgZoomWrap">
-            <div class="imgWrap" ref="imgWrap"><img :src="showImgInfo.imgUrl" alt="zoomImg"></div>
+            <div class="imgWrap" ref="imgWrap"><img :src="showImgInfo.url" alt="zoomImg"></div>
         </div>
     </div>
 </template>

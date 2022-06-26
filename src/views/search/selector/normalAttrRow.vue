@@ -5,7 +5,7 @@
             <ul class="attributeList">
                 <li v-for="(attrVaule, index) in attrList" :key="index">
                     <input type="checkbox" v-show="multiSelectStatus">
-                    {{attrVaule}}
+                    <span @click="selectOneAttrValue(attrVaule)" class="attrValue">{{attrVaule}}</span>
                 </li>
             </ul>
             <div class="buttons">
@@ -42,6 +42,9 @@ export default {
         toggleMultiSelect(){
             this.multiSelectStatus = !this.multiSelectStatus;
             this.flod = !this.flod;
+        },
+        selectOneAttrValue(attrVaule){
+            this.$emit('selectAttr', attrVaule);
         }
     },
 }
@@ -76,7 +79,7 @@ export default {
             background-color: white;
             display: flex;
             flex-wrap: wrap;
-            li {
+            >li {
                 display: flex;
                 align-items: center;
                 padding: 10px;
@@ -84,6 +87,12 @@ export default {
                 white-space: nowrap;
                 font-size: 12px;
                 color: #005aa0;
+
+                .attrValue{
+                    &:hover{
+                        cursor: pointer;
+                    }
+                }
             }
         }
 

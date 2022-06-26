@@ -9,9 +9,9 @@
             <div class="search">
                 <div class="searchBar">
                     <i class="graph iconfont icon-zhaoxiangji"></i>
-                    <input type="text" placeholder="搜索" :value="keyword">
+                    <input type="text" placeholder="搜索" v-model="keyword">
                     <span>
-                        <i class="iconfont icon-Fangdajing" @click="goSearch"></i>
+                        <i class="iconfont icon-Fangdajing" @click="goSearch({keyword})"></i>
                     </span>
                 </div>
                 <div class="cart" @click="goCart">
@@ -66,6 +66,7 @@ export default {
     },
     mounted() {
         this.setCartInfo();
+        this.keyword = this.$route.query?.keyword;
     },
 }
 </script>

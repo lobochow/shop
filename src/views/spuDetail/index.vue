@@ -1,5 +1,6 @@
 <template>
   <div>
+      <top-nav></top-nav>
       <searchArea/>
       <detail/>
   </div>

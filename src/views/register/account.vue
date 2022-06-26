@@ -50,6 +50,8 @@ export default {
                 password: this.password
             })
             if(result.code == 200){
+                this.$parent.account = this.account;
+                this.$parent.password = this.password;
                 this.$router.push('/register/complete');
             }else{
                 this.$message({

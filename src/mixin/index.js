@@ -3,10 +3,10 @@ const routerJump = {
         goHome() {
             this.$router.push('/');
         },
-        goSearch(keyword) {
+        goSearch(query) {
             this.$router.push({
                 path: '/search',
-                query: { keyword }
+                query
             })
         },
         goCart() {
@@ -27,6 +27,10 @@ const routerJump = {
 
         goRegister(){
             this.$router.push('/register');
+        },
+
+        goLogin(){
+            this.$router.push('/login');
         }
     }
 }

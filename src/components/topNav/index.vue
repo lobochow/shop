@@ -6,9 +6,13 @@
                 <span>广东</span>
             </div>
             <div class="userNav">
-                <div class="acount">
-                    <span>你好，请登录</span>
+                <div class="acount" v-if="!userInfo">
+                    <span @click="goLogin">你好，请登录</span>
                     <span @click="goRegister">免费注册</span>
+                </div>
+                <div class="acount" v-if="userInfo">
+                    <span >你好，{{userInfo.account}}</span>
+                    <span @click="goLogout">登出</span>
                 </div>
                 <span @click="goBillRecord">我的订单</span>
                 <span>我的购物车</span>
@@ -21,9 +25,29 @@
 //引入mixin
 import {routerJump} from '@/mixin/index.js'
 
+import {getUserInfo} from '@/api'
+
 export default {
     name: "topNav",
     mixins: [routerJump],
+    data() {
+        return {
+            userInfo:{}
+        }
+    },
+    methods: {
+        async reqUserInfo(){
+            let result = await getUserInfo();
+            this.userInfo = result.data;
+        },
+        goLogout(){
+            this.userInfo = null;
+            localStorage.removeItem('lobo-shop-token');
+        }
+    },
+    mounted() {
+       this.reqUserInfo();
+    },
 };
 </script>
 

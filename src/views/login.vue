@@ -22,17 +22,17 @@
 
                         <div class="login-collecter">
                             <label for="account"><i class="iconfont icon-yonghu"></i></label>
-                            <input type="text" id="account" placeholder="邮箱/用户名/登陆手机">
+                            <input type="text" id="account" placeholder="邮箱/用户名/登陆手机" v-model="account">
                         </div>
 
                         <div class="login-collecter">
                             <label for="password"><i class="iconfont icon-mima"></i></label>
-                            <input type="password" id="password" placeholder="密码">
+                            <input type="password" id="password" placeholder="密码" v-model="password">
                         </div>
 
                         <span class="login-forgetPsw">忘记密码</span>
 
-                        <div class="login-loginBtn">登录</div>
+                        <div class="login-loginBtn" @click="goLogin">登录</div>
                     </form>
 
                     <div class="login-footer">
@@ -67,8 +67,38 @@
 </template>
 
 <script>
+import {postLogin} from '@/api'
+
 export default {
-    name: 'login'
+    name: 'login',
+    data() {
+        return {
+            account: '',
+            password: ''
+        }
+    },
+    methods: {
+        async goLogin(){
+            let {account, password} = this;
+            let result = await postLogin({
+                account,
+                password
+            });
+            if(result.code == 200){
+                localStorage.setItem('lobo-shop-token', result.token);
+                this.$message({
+                    message: '登陆成功',
+                    type: "success"
+                });
+                this.$router.push('/');
+            }else{
+                this.$message({
+                    message: result.msg,
+                    type: 'warning'
+                })
+            }
+        }
+    },
 }
 </script>
 
