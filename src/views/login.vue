@@ -37,10 +37,9 @@
 
                     <div class="login-footer">
                         <div class="login-media">
-                            <span>QQ</span>
-                            <span>微信</span>
+                            <span @click="$router.push('/')">首页</span>
                         </div>
-                        <div class="register">
+                        <div class="register" @click="$router.push('/register')">
                             <i class="iconfont icon-xiangyou1"></i>
                             立即注册
                         </div>
@@ -67,8 +66,6 @@
 </template>
 
 <script>
-import {postLogin} from '@/api'
-
 export default {
     name: 'login',
     data() {
@@ -78,27 +75,39 @@ export default {
         }
     },
     methods: {
-        async goLogin(){
-            let {account, password} = this;
-            let result = await postLogin({
-                account,
-                password
-            });
-            if(result.code == 200){
-                localStorage.setItem('lobo-shop-token', result.token);
-                this.$message({
-                    message: '登陆成功',
-                    type: "success"
-                });
+        async goLogin() {
+            let { account, password } = this;
+            //校验功能
+                //账号--4到16位（字母，数字，下划线，减号）不忽略大小写
+                let accountReg = /^[a-zA-Z0-9_-]{4,16}$/;
+                //密码--4到16位（字母，数字，下划线，减号）
+                let passwordReg = /^[a-zA-Z0-9_-]{4,16}$/;
+                if(!accountReg.test(account)) {
+                    this.$message({
+                        type: 'warning',
+                        message: '账号不合法'
+                    })
+                    return;
+                }
+                if(!passwordReg.test(password)) {
+                    this.$message({
+                        type: 'warning',
+                        message: '密码不合法'
+                    })
+                    return;
+                }
+                
+            try {
+                await this.$store.dispatch('userStore/acLogin', { account, password });
                 this.$router.push('/');
-            }else{
+            } catch (error) {
                 this.$message({
-                    message: result.msg,
-                    type: 'warning'
+                    type: 'error',
+                    message: error.message
                 })
             }
         }
-    },
+    }
 }
 </script>
 
@@ -153,12 +162,12 @@ export default {
 
                     margin: 20px 0px;
 
-                    >h4{
+                    > h4 {
                         font-weight: 400;
                     }
 
-                    .selected{
-                        color: #E4393C;
+                    .selected {
+                        color: #e4393c;
                         font-weight: bold;
                     }
                 }
@@ -217,6 +226,10 @@ export default {
                         color: white;
 
                         background-color: #e4393c;
+
+                        &:hover{
+                            cursor: pointer;
+                        }
                     }
                 }
 
@@ -231,18 +244,9 @@ export default {
                     background-color: #fcfcfc;
 
                     .login-media {
-                        > :nth-child(1) {
-                            &::after {
-                                content: "";
-                                display: inline-block;
-
-                                width: 1px;
-                                height: 10px;
-                                margin: 0px 10px;
-
-                                vertical-align: middle;
-
-                                background-color: #cccccc;
+                        > span{
+                            &:hover{
+                                cursor: pointer;
                             }
                         }
                     }
@@ -262,6 +266,10 @@ export default {
 
                             color: white;
                             font-size: 10px;
+                        }
+
+                        &:hover{
+                            cursor: pointer;
                         }
                     }
                 }

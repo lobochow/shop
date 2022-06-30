@@ -1,21 +1,22 @@
 <template>
     <div class="topNav">
         <div class="container">
-            <div class="location">
+            <!-- <div class="location">
                 <i class="iconfont icon-didian"></i>
                 <span>广东</span>
-            </div>
+            </div> -->
+            <span class="goButton" @click="goHome">首页</span>
             <div class="userNav">
-                <div class="acount" v-if="!userInfo">
-                    <span @click="goLogin">你好，请登录</span>
-                    <span @click="goRegister">免费注册</span>
+                <div class="acount" v-if="!username">
+                    <span @click="goLogin" class="goButton">你好，请登录</span>
+                    <span @click="goRegister" class="goButton">免费注册</span>
                 </div>
-                <div class="acount" v-if="userInfo">
-                    <span >你好，{{userInfo.account}}</span>
-                    <span @click="goLogout">登出</span>
+                <div class="acount" v-if="username">
+                    <span>你好，{{username}}</span>
+                    <span @click="goLogout" class="goButton">登出</span>
                 </div>
                 <span @click="goBillRecord">我的订单</span>
-                <span>我的购物车</span>
+                <span @click="goCart">我的购物车</span>
             </div>
         </div>
     </div>
@@ -23,30 +24,30 @@
 
 <script>
 //引入mixin
-import {routerJump} from '@/mixin/index.js'
+import { routerJump } from '@/mixin/index.js'
 
-import {getUserInfo} from '@/api'
+import { mapState } from 'vuex'
 
 export default {
     name: "topNav",
     mixins: [routerJump],
-    data() {
-        return {
-            userInfo:{}
-        }
+    computed: {
+        ...mapState('userStore', ['username'])
     },
     methods: {
-        async reqUserInfo(){
-            let result = await getUserInfo();
-            this.userInfo = result.data;
+        goLogout() {
+            this.$store.commit('userStore/muLogout');
         },
-        goLogout(){
-            this.userInfo = null;
-            localStorage.removeItem('lobo-shop-token');
+        async getUserInfo() {
+            try {
+                this.$store.dispatch('userStore/acReqCartInfo');
+            } catch (error) {
+                console.log(error.message);
+            }
         }
     },
     mounted() {
-       this.reqUserInfo();
+        this.getUserInfo();
     },
 };
 </script>
@@ -80,6 +81,11 @@ export default {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+
+            > span:hover {
+                cursor: pointer;
+            }
+
             > span::before {
                 content: "";
                 width: 1px;
@@ -90,11 +96,13 @@ export default {
                 margin: 0 1vw;
                 vertical-align: middle;
             }
-
             > .acount span:nth-child(2) {
                 margin-left: 1vw;
             }
         }
     }
+}
+.goButton:hover {
+    cursor: pointer;
 }
 </style>

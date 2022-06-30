@@ -41,11 +41,6 @@ export const getCategoryList = () => request({
     url: '/v1/categorys'
 });
 
-export const getCartInfo = () => request({
-    method: 'get',
-    url: '/v1/cart'
-});
-
 export const getHomeSwiperImg = () => request({
     method: 'get',
     url: '/v1/homeSwiper'
@@ -61,11 +56,6 @@ export const reqSkuInfo = (query) => request({
     method: 'get',
     url: '/v1/sku',
     query
-})
-
-export const reqCartInfo = () => request({
-    method: 'get',
-    url: '/mock/1027634/v1/getCartInfo'
 })
 
 export const reqPayBillInfo = () => request({
@@ -109,5 +99,28 @@ export const getUserInfo = () => request({
 export const getSearchInfo = (query) => request({
     method: 'get',
     url: '/v1/search',
+    query
+})
+
+export const getCartInfo = () => request({
+    method: 'get',
+    url: '/v1/cart'
+})
+
+export const postAddAndUpdateCart = (body) => request({
+    method: 'post',
+    url: '/v1/cart',
+    body
+})
+
+export const postPayBill = (body) => request({
+    method: 'post',
+    url: '/v1/bill',
+    body
+})
+
+export const getPayBill = (query) => request({
+    method: 'get',
+    url: '/v1/bill',
     query
 })

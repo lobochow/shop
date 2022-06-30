@@ -52,8 +52,8 @@
                 </div> -->
 
                 <div class="addCart">
-                    <input type="number" value="1" min="1" max="10">
-                    <span>加入购物车</span>
+                    <input type="number" value="1" min="1" max="10" v-model="buyNum">
+                    <span @click="addCart">加入购物车</span>
                 </div>
             </div>
         </div>
@@ -67,6 +67,8 @@ import { reqSkuInfo, reqSpuInfo } from '@/api/index.js'
 
 import zoomSwiper from '@/views/spuDetail/zoomSwiper'
 
+import { mapState } from 'vuex'
+
 export default {
     name: 'detail',
     components: { dropdown, zoomSwiper },
@@ -76,7 +78,11 @@ export default {
             currentSpuInfo: {},
             attrList: [],
             selectedAttr: [],
+            buyNum: 1,
         }
+    },
+    computed: {
+        ...mapState('userStore', ['user_id', 'cartList'])
     },
     methods: {
         getTitle(spuInfo) {
@@ -187,7 +193,7 @@ export default {
                 })
             })
 
-            if (filterSpus.length === 1 && this.selectedAttr.length === this.attrList.length) {
+            if (filterSpus.length === 1) {
                 this.currentSpuInfo = filterSpus[0];
             }
         },
@@ -206,6 +212,56 @@ export default {
                     attrValue
                 })
                 this.attrFilter();
+            }
+        },
+        async addCart() {
+            
+            if (!this.user_id) {
+                this.$message({
+                    type: 'warning',
+                    message: '请先登陆！'
+                })
+            } else {
+
+                let targetGoodList = this.cartList?.map(item => ({
+                    count: item.count,
+                    spu_id: item.spuInfo._id
+                }));
+                
+                //检测销售属性是否全选
+                if(this.selectedAttr.length < this.attrList.length) {
+                    this.$message({
+                        type: 'warning',
+                        message: '请选择完整的属性!'
+                    })
+                    return;
+                }
+
+                let hasGood = targetGoodList.find(item => item.spu_id === this.currentSpuInfo._id);
+                if (hasGood) {
+                    hasGood.count += this.buyNum;
+                } else {
+                    targetGoodList.push({
+                        spu_id: this.currentSpuInfo._id,
+                        count: this.buyNum
+                    });
+                }
+
+                try {
+                    this.$store.dispatch('userStore/acAddCart', {
+                        user_id: this.user_id,
+                        goodsList: targetGoodList
+                    })
+                    this.$message({
+                        type: 'success',
+                        message: '已加入购物车!'
+                    })
+                } catch (error) {
+                    this.$message({
+                        type: 'waring',
+                        message: error.message
+                    })
+                }
             }
         }
     },

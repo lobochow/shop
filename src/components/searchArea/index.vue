@@ -9,17 +9,17 @@
             <div class="search">
                 <div class="searchBar">
                     <i class="graph iconfont icon-zhaoxiangji"></i>
-                    <input type="text" placeholder="搜索" v-model="keyword">
+                    <input type="text" placeholder="搜索" v-model="keyword" @keydown.enter="goSearch({keyword})">
                     <span>
                         <i class="iconfont icon-Fangdajing" @click="goSearch({keyword})"></i>
                     </span>
                 </div>
                 <div class="cart" @click="goCart">
-                    <span class="cartNum">{{cartInfo.cartNum}}</span>
+                    <span class="cartNum" v-if="cartList.length !== 0" >{{cartList.length}}</span>
                     <i class="iconfont icon-gouwuchekong"></i>
                     我的购物车
                 </div>
-                <ul class="hotSearch">
+                <!-- <ul class="hotSearch">
                     <li>车品特惠</li>
                     <li>京东京造</li>
                     <li>智能手表</li>
@@ -38,7 +38,7 @@
                     <li>京东生鲜</li>
                     <li>京东国际</li>
                     <li>京东云</li>
-                </ul>
+                </ul> -->
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
 //引入mixin
 import { routerJump } from '@/mixin/index.js'
 
-import { getCartInfo } from '@/api'
+import {mapState} from 'vuex'
 
 export default {
     name: 'searchArea',
@@ -59,13 +59,10 @@ export default {
             cartInfo: {}
         }
     },
-    methods: {
-        async setCartInfo() {
-            this.cartInfo = await getCartInfo();
-        }
+    computed: {
+        ...mapState('userStore', ['cartList'])
     },
     mounted() {
-        this.setCartInfo();
         this.keyword = this.$route.query?.keyword;
     },
 }
@@ -91,6 +88,9 @@ export default {
         }
 
         .search {
+            display: flex;
+            align-items: center;
+
             .searchBar {
                 position: relative;
                 display: inline-block;

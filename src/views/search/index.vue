@@ -1,9 +1,13 @@
 <template>
     <div class="searchPage">
         <top-nav></top-nav>
-        <searchArea />
+        <searchArea @getSearchInfo="getSpuList" />
         <selector :spuInfo="spuInfo" />
         <spu-list :spuList="spuList"></spu-list>
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                       :page-sizes="[5, 10, 15]" :page-size="pageSize" layout="prev, pager, next, jumper, sizes, total"
+                       :total="total">
+        </el-pagination>
     </div>
 </template>
 
@@ -13,7 +17,7 @@ import searchArea from "@/components/searchArea"
 import selector from "@/views/search/selector"
 import spuList from "@/views/search/spuList.vue"
 
-import { getSearchInfo } from '@/api'
+import { getSearchInfo, getUserInfo } from '@/api'
 
 export default {
     name: 'search',
@@ -32,7 +36,10 @@ export default {
                 swipers: [{name: String, url: Srting}]
             }
             */
-            spuList: undefined
+            spuList: undefined, 
+            currentPage: 1,
+            pageSize: 5,
+            total:0
         }
     },
     computed: {
@@ -76,13 +83,28 @@ export default {
             return result;
         }
     },
+    watch:{
+        '$route.query' : function(){
+            this.getSpuList();
+        }
+    },
     methods: {
         //获取商品列表
         async getSpuList() {
-            this.spuList = (await getSearchInfo(this.$route.query)).data;
+            let result = (await getSearchInfo({...this.$route.query, currentPage: this.currentPage, pageSize: this.pageSize}));
+            this.spuList = result.data.spuList;
+            this.total = result.data.count[0]?.count ?? 0;
+        },
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.getSpuList();
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.getSpuList();
         }
     },
-    mounted(){
+    mounted() {
         this.getSpuList();
     }
 }
@@ -90,8 +112,14 @@ export default {
 
 <style lang="less">
 .searchPage {
+    min-height: 100vh;
     width: 100%;
     min-width: 1000px;
     background-color: white;
+}
+
+.el-pagination {
+    text-align: center;
+    margin-top: 20px;
 }
 </style>

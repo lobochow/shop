@@ -3,7 +3,7 @@
         <top-nav></top-nav>
         <div class="billRecordWrap">
             <div class="billRecords">
-                <div class="tags">
+                <!-- <div class="tags">
                     <div class="billCategory">
                         <span>全部订单</span>
                         <span>待付款</span>
@@ -16,7 +16,7 @@
                         <input type="text">
                         <span>搜索</span>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="title">
                     <span class="timeDuration">近三个月订单</span>
@@ -32,29 +32,32 @@
                         <span class="datetime">{{recordItem.finishTime}}</span>
                         <span class="billId">
                             <span>订单号：</span>
-                            {{recordItem.billId}}
+                            {{recordItem._id}}
                         </span>
                     </div>
-                    <div class="recordTable" v-for="(skuItem, skuIndex) in recordItem.skuList" :key="skuIndex">
+                    <div class="recordTable" v-for="(skuItem, skuIndex) in recordItem.spuInfo" :key="skuIndex">
                         <div class="skuDetail">
                             <div class="imgWrap">
-                                <img :src="skuItem.skuImg" alt="skuImg">
+                                <img :src="skuItem.swipers[0].url" alt="skuImg">
                             </div>
-                            <span class="skuName">{{skuItem.spuTitle + skuItem.skuInfo}}</span>
+                            <span class="skuName">{{skuItem.skuInfo.description}}</span>
                         </div>
                         <span class="buyNum">x{{skuItem.buyNum}}</span>
                         <span>申请售后</span>
-                        <p class="recevier">lobo</p>
+                        <p class="recevier">{{username}}</p>
                         <div class="payInformation">
-                            <span class="costNum">¥{{skuItem.price}}</span>
+                            <span class="costNum">¥{{skuItem.price * skuItem.buyNum}}</span>
                             <span class="payWay">在线支付</span>
                         </div>
                         <p class="status">已完成</p>
-                        <p @click="goComment">评价</p>
+                        <p @click="goComment" class="commentButton">评价</p>
                     </div>
                 </div>
 
-                <pagination class="pagination"></pagination>
+                <pagination class="pagination" :pageSize="paginationOption.pageSize"
+                            :currentPage="paginationOption.currentPage" :total="total" :pageSizes="[1, 5, 10]"
+                            @pageChange="handlerPagechange" @pageSizeChange="handlerPageSizeChange">
+                </pagination>
             </div>
         </div>
     </div>
@@ -63,21 +66,59 @@
 <script>
 import topNav from "@/components/topNav"
 import pagination from "@/components/pagination.vue"
-import { reqBillRecord } from "@/api/index.js"
+import { mapState } from 'vuex'
+import { getUserInfo } from '@/api'
 
 import { routerJump } from "@/mixin"
 
 export default {
     name: 'billRecord',
     mixins: [routerJump],
+    components: { topNav, pagination },
     data() {
         return {
-            billRecordInfo: {}
+            billRecordInfo: {},
+            total: 0,
+            paginationOption: {
+                pageSize: 1,
+                currentPage: 1,
+            }
         }
     },
-    components: { topNav, pagination },
+    computed: {
+        ...mapState('userStore', ['billInfo', 'username'])
+    },
+    watch: {
+        billInfo(newValue) {
+            this.billRecordInfo = newValue.billList.map(item => {
+                item.spuInfo.forEach((spu, index) => {
+                    spu.buyNum = item.spuList[index].buyNum;
+                })
+                return item;
+            })
+            this.total = newValue.count;
+        }
+    },
+    methods: {
+        async isLogin() {
+            let result = await getUserInfo();
+            console.log(result.code);
+            if (result.code === 201) {
+                this.$router.push('/login');
+            }
+        },
+        handlerPagechange(value) {
+            this.paginationOption.currentPage = value;
+            this.$store.dispatch('userStore/acReqBillInfo', this.paginationOption);
+        },
+        handlerPageSizeChange(value) {
+            this.paginationOption.pageSize = value;
+            this.$store.dispatch('userStore/acReqBillInfo', this.paginationOption);
+        }
+    },
     mounted() {
-        this.billRecordInfo = reqBillRecord();
+        this.isLogin();
+        this.$store.dispatch('userStore/acReqBillInfo', this.paginationOption);
     }
 }
 </script>
@@ -117,6 +158,14 @@ export default {
         .recordTable {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
+
+            > .commentButton {
+                color: red;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
 
             &:not(:last-child) {
                 border-bottom: 1px solid #e5e5e5;

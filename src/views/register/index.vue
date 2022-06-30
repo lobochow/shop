@@ -3,11 +3,11 @@
         <div class="header-wrap">
             <header>
                 <div class="imgWrap">
-                    <img src="@/assets/images/logo.png" alt="logo">
+                    <img src="@/assets/images/logo.png" alt="logo" @click="goHome">
                 </div>
                 <h3>欢迎注册</h3>
                 <p class="loginTip">已有账号？
-                    <span>
+                    <span class="loginButton" @click="goLogin">
                         请登录>
                     </span>
                 </p>
@@ -17,29 +17,32 @@
             <main>
                 <div class="status">
                     <p class="status-icon">
-                        <span class="stepComplete">
+                        <span :class="{currentStep: registerStatus === 1, stepComplete: registerStatus > 1}">
                             <span>1</span>
                             <i class="iconfont icon-duigou"></i>
                         </span>
-                        <span class="arrowComplete">··········></span>
-                        <span class="currentStep">
+                        <span :class="{arrowComplete: registerStatus >= 1}">··········></span>
+                        <span :class="{currentStep: registerStatus === 2, stepComplete: registerStatus > 2, normal: registerStatus < 2}">
                             <span>2</span>
                             <i class="iconfont icon-duigou"></i>
                         </span>
-                        <span>··········></span>
-                        <span class="normal">
+                        <span :class="{arrowComplete: registerStatus >= 2}">··········></span>
+                        <span :class="{stepComplete: registerStatus === 3, normal: registerStatus < 3}">
                             <span>3</span>
                             <i class="iconfont icon-duigou"></i>
                         </span>
                     </p>
                     <p class="status-title">
-                        <span class="complete">验证手机号</span>
-                        <span class="current">填写账号信息</span>
-                        <span>注册成功</span>
+                        <span :class="{complete: registerStatus > 1, current: registerStatus === 1}">验证手机号</span>
+                        <span :class="{complete: registerStatus > 2, current: registerStatus === 2}">填写账号信息</span>
+                        <span :class="{complete: registerStatus === 3}">注册成功</span>
                     </p>
                 </div>
-
-                <router-view></router-view>
+                
+                <phone v-if="registerStatus === 1" @changRegisterStatus="changRegisterStatus" />
+                <account v-if="registerStatus === 2" @changRegisterStatus="changRegisterStatus" />
+                <complete v-if="registerStatus === 3" @changRegisterStatus="changRegisterStatus"/>
+                
             </main>
         </div>
         <footer>
@@ -61,15 +64,30 @@
 </template>
 
 <script>
+import phone from '@/views/register/phone'
+import account from '@/views/register/account'
+import complete from '@/views/register/complete'
+
+import {routerJump} from '@/mixin/index.js'
+
 export default {
     name: 'register',
+    mixins: [routerJump],
+    components: {phone, account, complete},
     data() {
         return {
+            //1填写手机 2填写账号 3完成注册
+            registerStatus: 1,
             phone: '',
             account: '',
             password: ''
         }
     },
+    methods: {
+        changRegisterStatus(value) {
+            this.registerStatus = value;
+        }
+    }
 }
 </script>
 
@@ -118,6 +136,10 @@ export default {
 
             > span {
                 color: #e22;
+
+                &:hover{
+                    cursor: pointer;
+                }
             }
         }
     }

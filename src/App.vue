@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    this.$store.dispatch('userStore/acReqUserInfo');
+  }
 }
 </script>
 
@@ -15,6 +18,10 @@ export default {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+#app {
+    min-height: 100vh;
 }
 
 div,span{

@@ -25,11 +25,11 @@ const routerJump = {
             this.$router.push('/comment');
         },
 
-        goRegister(){
+        goRegister() {
             this.$router.push('/register');
         },
 
-        goLogin(){
+        goLogin() {
             this.$router.push('/login');
         }
     }

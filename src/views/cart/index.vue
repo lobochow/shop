@@ -1,17 +1,16 @@
 <template>
     <div>
         <top-nav></top-nav>
-        <searchArea />
         <div class="cartWrap">
             <div class="cartContainer">
                 <div class="location">
-                    <span>全部商品</span>
-                    <span>配送至：<input type="select" value="12345"></span>
+                    <!-- <span>全部商品</span>
+                    <span>配送至</span> -->
                 </div>
 
                 <div class="title">
                     <span>
-                        <span><input type="checkbox">全选</span>
+                        <span><input type="checkbox" v-model="allSelected">全选</span>
                         <span>商品</span>
                     </span>
                     <span>单价</span>
@@ -22,50 +21,58 @@
 
                 <div class="skuDetail" v-for="(cartItem, cartItemIndex) in cartInfo" :key="cartItemIndex">
                     <p>
-                        <input type="checkbox">
-                        <span class="shopname">{{cartItem.shopName}}</span>
+                        <!--店名 <input type="checkbox">
+                        <span class="shopname">{{cartItem.skuInfo.description}}</span> -->
                     </p>
                     <p>
                         <span>
-                            <input type="checkbox">
-                            <span class="imgWrap"><img :src="cartItem.skuImg" alt="skuImg"></span>
+                            <input type="checkbox" v-model="cartItem.selected">
+                            <span class="imgWrap"><img :src="cartItem.spuInfo.swipers[0].url" alt="skuImg"></span>
                             <span>
-                                <span>{{cartItem.spuTitle}}</span>
-                                <span>选服务</span>
+                                <span>{{cartItem.spuInfo.attrList.reduce( (pre, cur) => pre + ' ' + cur.attrValue, "")}}</span>
                             </span>
                         </span>
 
                         <span class="skuName">
-                            {{cartItem.skuInfo}}
+                            {{cartItem.skuInfo.description}}
                         </span>
 
-                        <span class="price">¥{{cartItem.price}}</span>
+                        <span class="price">¥{{cartItem.spuInfo.price}}</span>
 
-                        <span class="buyNum">{{cartItem.buyNum}}</span>
+                        <span class="buyNum">{{cartItem.count}}</span>
 
-                        <span class="skuSum">¥{{calcRowPrice(cartItem.price, cartItem.buyNum)}}</span>
+                        <span class="skuSum">¥{{calcRowPrice(cartItem.spuInfo.price, cartItem.count)}}</span>
 
                     <ul class="operation">
-                        <li>删除</li>
-                        <li>到货通知</li>
-                        <li>移入关注</li>
+                        <li @click="reqDeleteCartItem(cartItem)">删除</li>
+                        <!-- <li>到货通知</li>
+                        <li>移入关注</li> -->
                     </ul>
                     </p>
                 </div>
 
                 <div class="pay">
                     <span>
-                        <span><input type="checkbox">全选</span>
-                        <span>删除选中的商品</span>
-                        <span>移入关注</span>
-                        <span>清理购物车</span>
+                        <span><input type="checkbox" v-model="allSelected">全选</span>
+                        <span @click="reqDeleteSelected">删除选中的商品</span>
+                        <!-- <span>移入关注</span> -->
+                        <span @click="deleteAllCartItem">清空购物车</span>
                     </span>
 
                     <span>
                         <span>已选择0件商品</span>
                         <span>总价：¥0.00</span>
-                        <span @click="goPayBill">去结算</span>
+                        <span @click="togglePay">去结算</span>
                     </span>
+                </div>
+            </div>
+        </div>
+        <div class="payMsg" v-show="showPay">
+            <div class="dialog">
+                <div>二维码</div>
+                <div>
+                    <button @click="togglePay">取消</button>
+                    <button @click="paySuccess">支付完成</button>
                 </div>
             </div>
         </div>
@@ -75,8 +82,11 @@
 <script>
 import topNav from "@/components/topNav"
 import searchArea from "@/components/searchArea"
-import { reqCartInfo } from '@/api/index.js'
 import { routerJump } from '@/mixin/index.js'
+import { mapState } from 'vuex'
+import {getUserInfo} from "@/api"
+
+let SILLYDATE = require('silly-datetime');
 
 export default {
     name: 'cart',
@@ -84,17 +94,142 @@ export default {
     components: { topNav, searchArea },
     data() {
         return {
-            cartInfo: {}
+            cartInfo: [],
+            showPay: false
+        }
+    },
+    computed: {
+        ...mapState('userStore', ['user_id', 'cartList']),
+        allSelected: {
+            get() {
+                if (this.cartInfo.length === 0) {
+                    return false;
+                }
+
+                return this.cartInfo.every(item => item.selected === true);
+            },
+            set(value) {
+                this.cartInfo.forEach(item => item.selected = value);
+            }
+        }
+    },
+    watch: {
+        cartList(newCartList) {
+            this.cartInfo = newCartList.map(item => {
+                this.$set(item, 'selected', true);
+                return item;
+            })
         }
     },
     methods: {
-        calcRowPrice(price, num){
+        calcRowPrice(price, num) {
             return (price * num).toFixed(2);
+        },
+        togglePay() {
+            this.showPay = !this.showPay;
+        },
+        reqDeleteCartItem(cartItem) {
+            let targetCartList = this.cartList.filter(item => item.spuInfo._id !== cartItem.spuInfo._id);
+            targetCartList = targetCartList.map(item => {
+                return {
+                    count: item.count,
+                    spu_id: item.spuInfo._id
+                }
+            })
+            try {
+                this.$store.dispatch('userStore/acUpdateCart', { user_id: this.user_id, goodsList: targetCartList });
+            } catch (error) {
+                this.$message({
+                    type: 'success',
+                    message: error.message
+                })
+            }
+        },
+        reqDeleteSelected() {
+            let targetCartList = this.cartInfo.filter(item => item.selected == false);
+            targetCartList = targetCartList.map(item => {
+                return {
+                    count: item.count,
+                    spu_id: item.spuInfo._id
+                }
+            })
+            try {
+                this.$store.dispatch('userStore/acUpdateCart', { user_id: this.user_id, goodsList: targetCartList });
+            } catch (error) {
+                this.$message({
+                    type: 'success',
+                    message: error.message
+                })
+            }
+        },
+        deleteAllCartItem() {
+            try {
+                this.$store.dispatch('userStore/acUpdateCart', { user_id: this.user_id, goodsList: [] });
+            } catch (error) {
+                this.$message({
+                    type: 'success',
+                    message: error.message
+                })
+            }
+        },
+        paySuccess() {
+            //-1选择商品数量为0则提示
+
+            //0.整理数据
+            // let billReqData = {
+            //     user_id: mongoose.Types.ObjectId,
+            //     finishTime: String,
+            //     spuList: [mongoose.Types.ObjectId]
+            // }
+
+            let finishTime = Date.now();
+            finishTime = SILLYDATE.format(finishTime, 'YYYY-MM-DD HH:mm:ss');
+
+            let spuList = this.cartInfo.filter(item => item.selected === true).map(item => ({
+                buyNum: item.count,
+                spu_id: item.spuInfo._id
+            }));
+            console.log(spuList);
+
+            let billReqData = {
+                user_id: this.user_id,
+                finishTime,
+                spuList
+            }
+
+            //1.dispatch
+            try {
+                this.$store.dispatch('userStore/acUpdateBill', billReqData)
+
+                //成功删除购物车相应物品后跳转
+                
+                this.$store.dispatch('userStore/acUpdateCart', {
+                    user_id: this.user_id,
+                    goodsList: this.cartInfo.filter(item => item.selected === true)
+                });
+
+                this.togglePay();
+
+            } catch (error) {
+                //失败提醒
+                this.$message({
+                    type: 'warning',
+                    message: error.message
+                })
+            } 
+        },
+        async isLogin(){
+            let result = await getUserInfo();
+            console.log(result.code);
+            if(result.code === 201) {
+                this.$router.push('/login');
+            }
         }
     },
     mounted() {
-        this.cartInfo = reqCartInfo();
-    }
+        this.isLogin();
+        console.log('mounted');
+    },
 }
 </script>
 
@@ -142,7 +277,7 @@ export default {
                 grid-column: 3;
             }
 
-            > :nth-child(n + 2):nth-child(-n + 4) {
+            > :not(:first-child) {
                 justify-self: center;
             }
         }
@@ -172,6 +307,7 @@ export default {
                 > :nth-child(1) {
                     display: flex;
                     justify-self: start;
+                    align-items: center;
 
                     > :not(:nth-child(1)) {
                         margin-left: 20px;
@@ -201,6 +337,11 @@ export default {
 
                 > :nth-child(6) {
                     list-style: none;
+
+                    > :hover {
+                        cursor: pointer;
+                        color: #e2231a;
+                    }
                 }
             }
         }
@@ -214,6 +355,11 @@ export default {
                 padding: 10px;
                 > :not(:nth-child(1)) {
                     margin-left: 10px;
+
+                    &:hover {
+                        cursor: pointer;
+                        color: #e2231a;
+                    }
                 }
             }
 

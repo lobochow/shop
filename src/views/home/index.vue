@@ -32,7 +32,8 @@ export default {
     methods: {
         async setCategoryList() {
             try {
-                this.cates_1 = await getCategoryList();
+                let result = await getCategoryList();
+                this.cates_1 = result.categorys;
             } catch (error) {
                 console.log(error);
             }
@@ -40,6 +41,7 @@ export default {
     },
     mounted() {
         this.setCategoryList();
+        this.$store.dispatch('userStore/acReqUserInfo');
     }
 };
 </script>

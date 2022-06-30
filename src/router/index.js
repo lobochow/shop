@@ -1,92 +1,66 @@
 import VueRouter from 'vue-router'
 
-import home from '@/views/home'
-import search from '@/views/search'
-import spuDetail from '@/views/spuDetail'
-import cart from '@/views/cart'
-import payBill from '@/views/payBill.vue'
-import billRecord from '@/views/billRecord.vue'
-import comment from '@/views/comment.vue'
-import login from '@/views/login.vue'
-import register from '@/views/register/index.vue'
-import phone from '@/views/register/phone.vue'
-import account from '@/views/register/account.vue'
-import complete from '@/views/register/complete.vue'
-import test from '@/views/test.vue'
+let originPush = VueRouter.prototype.push;
 
-export default new VueRouter({
+VueRouter.prototype.push = function (location, resolve, reject) {
+    if (resolve && reject) {
+        //相同点：都可调用函数一次，纂改上下文一次
+        //不同点：call参数逗号隔开,apply方法传递数组
+        originPush.call(this, location, resolve, reject);
+    } else {
+        originPush.call(this, location, () => { }, () => { });
+    }
+}
+
+const router = new VueRouter({
     routes: [
         {
             //路由命名
             name: 'home',
             path: '/',
-            component: home
+            component: () => import('@/views/home')
         },
         {
             name: 'search',
             path: '/search',
-            component: search
+            component: () => import('@/views/search')
         },
         {
             name: 'spuDetail',
             path: '/spuDetail',
-            component: spuDetail
+            component: () => import('@/views/spuDetail')
         },
         {
             name: 'cart',
             path: '/cart',
-            component: cart
+            component: () => import('@/views/cart')
         },
         {
             name: 'payBill',
             path: '/payBill',
-            component: payBill
+            component: () => import('@/views/payBill.vue')
         },
         {
             name: 'billRecord',
             path: '/billRecord',
-            component: billRecord
+            component: () => import('@/views/billRecord.vue')
         },
         {
             name: 'comment',
             path: '/comment',
-            component: comment
+            component: () => import('@/views/comment.vue')
         },
         {
             name: 'register',
             path: '/register',
-            component: register,
-            children:[
-                {
-                    name:'phone',
-                    path:'phone',
-                    component: phone
-                },
-                {
-                    name:'account',
-                    path:'account',
-                    component: account
-                },
-                {
-                    name:'complete',
-                    path:'complete',
-                    component: complete
-                },
-                {
-                    path: '/register',
-                    redirect: '/register/phone'
-                }
-            ]
+            component: () => import('@/views/register/index.vue')
         },
         {
             name: 'login',
             path: '/login',
-            component: login
-        },
-        {
-            name: 'test',
-            path: '/test',
-            component: test
+            component: () => import('@/views/login.vue')
         }
     ]
 })
+
+export default router;

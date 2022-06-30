@@ -13,14 +13,14 @@
                 <button v-show="multiSelectStatus" @click="toggleMultiSelect">取消</button>
             </div>
         </div>
-        <div class="more" v-show="!multiSelectStatus" @click="toggleFlod">
+        <!-- <div class="more" v-show="!multiSelectStatus" @click="toggleFlod">
             更多
             <i class="iconfont icon-xiangxia"></i>
         </div>
         <div class="multiSelect" v-show="!multiSelectStatus" @click="toggleMultiSelect">
             多选
             <i class="iconfont icon-xiangxia"></i>
-        </div>
+        </div> -->
     </div>
 </template>
 
